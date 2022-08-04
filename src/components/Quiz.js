@@ -7,7 +7,7 @@ const Quiz = () => {
     const questionsdata = [
       { id: 0, text: 'Which of this is not a programming language?',
           options: ['Python', 'Java', 'MC+', 'PHP'],
-        answer: 'MC-03' },
+        answer: 'MC+' },
       { id: 1, text: 'How many elements are in the periodic table?',
           options: [155, 118, 90, 85],
         answer: 118 },
