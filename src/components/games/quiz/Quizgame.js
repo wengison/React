@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import ContextGameState from '../context/Context';
+import ContextGameState from './context/Context';
 
 
 const Quizgame = (props) => {

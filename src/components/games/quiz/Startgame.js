@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import ContextGameState from '../context/Context';
+import ContextGameState from './context/Context';
 
 const Startgame = () => {
 
@@ -15,7 +15,7 @@ const Startgame = () => {
         <div className='startgame-div'>
             <img src={require('./react-logo.png')} alt={'obr'}></img>
             <h1>Welcome in React Quiz !!</h1>
-            <button onClick={()=>setGameState('quiz')} className='newgame-btn'>New game</button>
+            <button onClick={()=>setGameState('quiz')} className='newgame-btn'>New Quiz</button>
         </div>
       </div>
     </>
