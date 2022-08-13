@@ -7,8 +7,7 @@ import Chess from './Chess';
 import Endgame from './Endgame';
 
 function GamesCh() {
-    const [gameState, setGameState] = useState('start');
-
+    const [gameState, setGameState] = useState('chess');
 
   return (
     <ContextGameState.Provider value={{gameState,setGameState}}>
