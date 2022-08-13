@@ -77,7 +77,7 @@ export function Gameboard() {
         }
     }
 
-    // 4)start position---------------------------------------------------------
+    // 5)start position---------------------------------------------------------
     class Game {
         constructor(time) {
             this.time = time;
@@ -150,7 +150,7 @@ export function Gameboard() {
         setTimeout(Game.setGameboard,20);
     }
 
-    // 5)render---------------------------------------------------------
+    // 6)render---------------------------------------------------------
   return (
     <section className='chess-body'>
         <div  className='gameboard'>{setFields()}</div>
