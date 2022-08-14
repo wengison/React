@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react';
+import { Default } from './Default';
 
 ///. Simple Chess game - version: 1.0, last update: 14.8.2022 ///.
 ///.----------------------------------------------------------///.
 
 export function Gameboard() {
 // 1)pieces---------------------------------------------------------
+    const storageDefault = Default();
     const [pawnB,knightB,bishopB,rookB,queenB,kingB] = ['♟','♞','♝','♜','♛','♚'];
     const [pawnW,knightW,bishopW,rookW,queenW,kingW] = ['♙','♘','♗','♖','♕','♔'];
     const allBlack = ['♟','♞','♝','♜','♛','♚'];
     const allWhite = ['♙','♘','♗','♖','♕','♔'];
 
-    const storage = [[{"Field":"A8","Figure":"♜"},{"Field":"B8","Figure":"♞"},{"Field":"C8","Figure":"♝"},{"Field":"D8","Figure":"♛"},{"Field":"E8","Figure":"♚"},{"Field":"F8","Figure":"♝"},{"Field":"G8","Figure":"♞"},{"Field":"H8","Figure":"♜"},{"Field":"A7","Figure":"♟"},{"Field":"B7","Figure":"♟"},{"Field":"C7","Figure":"♟"},{"Field":"D7","Figure":"♟"},{"Field":"E7","Figure":"♟"},{"Field":"F7","Figure":"♟"},{"Field":"G7","Figure":"♟"},{"Field":"H7","Figure":"♟"},{"Field":"A6","Figure":""},{"Field":"B6","Figure":""},{"Field":"C6","Figure":""},{"Field":"D6","Figure":""},{"Field":"E6","Figure":""},{"Field":"F6","Figure":""},{"Field":"G6","Figure":""},{"Field":"H6","Figure":""},{"Field":"A5","Figure":""},{"Field":"B5","Figure":""},{"Field":"C5","Figure":""},{"Field":"D5","Figure":""},{"Field":"E5","Figure":""},{"Field":"F5","Figure":""},{"Field":"G5","Figure":""},{"Field":"H5","Figure":""},{"Field":"A4","Figure":""},{"Field":"B4","Figure":""},{"Field":"C4","Figure":""},{"Field":"D4","Figure":""},{"Field":"E4","Figure":""},{"Field":"F4","Figure":""},{"Field":"G4","Figure":""},{"Field":"H4","Figure":""},{"Field":"A3","Figure":""},{"Field":"B3","Figure":""},{"Field":"C3","Figure":""},{"Field":"D3","Figure":""},{"Field":"E3","Figure":""},{"Field":"F3","Figure":""},{"Field":"G3","Figure":""},{"Field":"H3","Figure":""},{"Field":"A2","Figure":"♙"},{"Field":"B2","Figure":"♙"},{"Field":"C2","Figure":"♙"},{"Field":"D2","Figure":"♙"},{"Field":"E2","Figure":"♙"},{"Field":"F2","Figure":"♙"},{"Field":"G2","Figure":"♙"},{"Field":"H2","Figure":"♙"},{"Field":"A1","Figure":"♖"},{"Field":"B1","Figure":"♘"},{"Field":"C1","Figure":"♗"},{"Field":"D1","Figure":"♕"},{"Field":"E1","Figure":"♔"},{"Field":"F1","Figure":"♗"},{"Field":"G1","Figure":"♘"},{"Field":"H1","Figure":"♖"}]];
-
 // 2)states---------------------------------------------------------
-    const [historyStorage, setHistoryStorage] = useState(storage);
+    const [historyStorage, setHistoryStorage] = useState(storageDefault);
     const [currentField, setCurrentField] = useState('');
     const [currentFigure, setCurrentFigure] = useState('');
     const [historyLevel, setHistoryLevel] = useState(0);
@@ -47,7 +47,9 @@ export function Gameboard() {
     const figureMovement = (field) => {
         const fields = Array.from(document.querySelectorAll('.field'));
         const clicked = fields[(indexes.indexOf(field))];
-        if(currentFigure===''&& clicked.innerHTML!==''&& clicked.innerHTML!==currentFigure) {
+
+        //1-vyber figury (oznaceni)
+        if(currentFigure===''&& clicked.innerHTML!==''&& clicked.innerHTML!==currentFigure&& historyLevel===historyStorage.length-1) {
             const pickFigure = () => {
                 fields.forEach(f=>f.style.color = 'black');
                 setCurrentFigure(clicked.innerHTML);
@@ -61,15 +63,19 @@ export function Gameboard() {
                 pickFigure();
                 setOnMove('white');
             }
-        } else if (currentFigure===clicked.innerHTML&& field===currentField) {
+        } 
+        //2-nechci tuto figuru (vraceni)
+        else if (currentFigure===clicked.innerHTML&& field===currentField) {
             setCurrentFigure('');
             setCurrentField('');
             (onMove==='black') ? setOnMove('white') : setOnMove('black');
             clicked.style.color = 'black';
-        } else if (currentFigure!==''&& clicked.innerHTML!==kingB&& clicked.innerHTML!==kingW) {
+        } 
+        //3-tah s figurou
+        else if (currentFigure!==''&& clicked.innerHTML!==kingB&& clicked.innerHTML!==kingW) {
             const vanishField = () => {
                 (fields[(indexes.indexOf(currentField))]).innerHTML = '';
-                (fields[(indexes.indexOf(currentField))]).style.color = 'black'
+                (fields[(indexes.indexOf(currentField))]).style.color = 'black';
             }
             if (onMove==='black'&& allWhite.indexOf(clicked.innerHTML)===-1) {
                 clicked.innerHTML = currentFigure;
@@ -108,29 +114,18 @@ export function Gameboard() {
             setCurrentField('');
             setCurrentFigure('');
             setOnMove('white');
-            setHistoryStorage(storage);
+            setHistoryStorage(storageDefault);
             setHistoryLevel(0);
         }
 
         setFigures() {
-            const inner = (piece, i) => {
-                this.fields[i].innerHTML = piece};
-            for (let i=0;i<16;i++) {
-                if(i===0||i===7) {
-                inner(rookB,i)};if(i===1||i===6) {
-                inner(knightB,i)};if(i===2||i===5) {
-                inner(bishopB,i)};if(i===3) {
-                inner(queenB,i)};if(i===4) {
-                inner(kingB,i)};if (i>7&&i<16) {
-                inner(pawnB,i)}};
-            for (let i=48; i <64; i++) {
-                if(i===56||i===63) {
-                inner(rookW,i)};if(i===57||i===62) {
-                inner(knightW,i)};if(i===58||i===61) {
-                inner(bishopW,i)};if(i===59) {
-                inner(queenW,i)};if(i===60) {
-                inner(kingW,i)};if (i>47&&i<56) {
-                inner(pawnW,i)}}
+            const fields = (Array.from(document.querySelectorAll('.field')));
+            let figures = [];
+            historyStorage[0].forEach(obj=>figures.push(obj.Figure));
+            for (let i=0;i<64;i++) {
+                fields[i].innerHTML = figures[0];
+                figures.shift();
+            } 
         }
     }
 
@@ -186,8 +181,10 @@ export function Gameboard() {
     }
 
     const viewHistory = () => {
-        console.log(historyLevel);
-        console.log(JSON.stringify(historyStorage[historyLevel]));
+        if (historyLevel===historyStorage.length-1) {
+            console.log(historyLevel);
+            console.log(JSON.stringify(historyStorage[historyLevel]));
+        }
         console.log(JSON.stringify({historyStorage}));
     }
 
