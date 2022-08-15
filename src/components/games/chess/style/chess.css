@@ -9,8 +9,43 @@
 }
 
 .history-btns {
+    width: 400px;
     padding: 5px;
-    /* display: flex; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.view-btn {
+    padding-inline: 5px;
+}
+.menu-btn {
+    left: 0;
+    position: absolute;
+    color:black;
+    font-weight: bold;
+    font-size: 1.0em;
+    padding-inline: 3px;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.option-btn {
+    right: 0;
+    position: absolute;
+    color: rgb(41, 41, 41);
+    font-weight: bold;
+    padding-inline: 2px;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.play-btn {
+    padding-inline: 10px;
 }
 
 .gameboard {

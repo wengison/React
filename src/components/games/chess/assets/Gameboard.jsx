@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { Default } from './Default';
+import {  TbHistory } from 'react-icons/tb';
+import { FiSettings } from 'react-icons/fi';
+import { HiMenuAlt1 } from 'react-icons/hi';
 
 ///. Simple Chess game - version: 1.0, last update: 14.8.2022 ///.
 ///.----------------------------------------------------------///.
@@ -116,6 +119,7 @@ export function Gameboard() {
             setOnMove('white');
             setHistoryStorage(storageDefault);
             setHistoryLevel(0);
+            document.querySelector('.play-btn').title = 'Click to start';
         }
 
         setFigures() {
@@ -126,6 +130,7 @@ export function Gameboard() {
                 fields[i].innerHTML = figures[0];
                 figures.shift();
             } 
+            document.querySelector('.play-btn').title = '';
         }
     }
 
@@ -154,6 +159,7 @@ export function Gameboard() {
             this.history.push(positions);
             setHistoryStorage(this.history);
             setCurrentPosition(historyStorage[historyLevel]);
+            document.querySelector('.play-btn').title = 'Click to restart';
         }
     }
 
@@ -202,12 +208,14 @@ export function Gameboard() {
   return (
     <section className='chess-body'>
         <div className='history-btns'>
+            <button className='menu-btn'><HiMenuAlt1 /></button>
             <button onClick={()=>listHistory('back')}>◄◄</button>
-            <button onClick={()=>{viewHistory()}}>View History</button>
+            <button onClick={()=>{viewHistory()}} className='view-btn' title='Look into the console'><TbHistory/> View History <TbHistory/></button>
             <button onClick={()=>listHistory('forth')}>►►</button>
+            <button className='option-btn'><FiSettings/></button>
         </div>
         <div  className='gameboard'>{setFields()}</div>
-        <button onClick={()=>{const game = new Game(600);game.setFigures()}}>Play</button>
+        <button onClick={()=>{const game = new Game(600);game.setFigures()}} className='play-btn' title='Click to start'>Play</button>
     </section>
   )
 }

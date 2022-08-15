@@ -1,22 +1,15 @@
-import React, {useState} from 'react';
-import ContextGameState from './context/Context';
+import React from 'react';
 import Header from '../../Header';
+import { Gameboard } from './assets/Gameboard';
+import './style/chess.css';
 
-import Startgame from './Startgame';
-import Chess from './Chess';
-import Endgame from './Endgame';
 
 function GamesCh() {
-    const [gameState, setGameState] = useState('chess');
-
   return (
-    <ContextGameState.Provider value={{gameState,setGameState}}>
+    <>
         <Header className='header'/>
-        {gameState === 'start' && <Startgame className='startgame'/>}
-        {gameState === 'chess' && <Chess className='chess'/>}
-        {gameState === 'end' && <Endgame className='endgame'/>}
-    </ContextGameState.Provider>
+        <Gameboard/>
+    </>
   )
 }
-
 export default GamesCh;
