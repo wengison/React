@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../../Header';
-import { Gameboard } from './assets/Gameboard';
+import { Chess } from './assets/Chess';
 import './style/chess.css';
 
 
@@ -8,7 +8,7 @@ function GamesCh() {
   return (
     <>
         <Header className='header'/>
-        <Gameboard/>
+        <Chess/>
     </>
   )
 }

@@ -7,7 +7,7 @@ import { HiMenuAlt1 } from 'react-icons/hi';
 ///. Simple Chess game - version: 1.0, last update: 14.8.2022 ///.
 ///.----------------------------------------------------------///.
 
-export function Gameboard() {
+export function Chess() {
 // 1)pieces---------------------------------------------------------
     const storageDefault = Default();
     const [pawnB,knightB,bishopB,rookB,queenB,kingB] = ['♟','♞','♝','♜','♛','♚'];
