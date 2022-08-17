@@ -1,34 +1,28 @@
+///. Simple Chess game - version: 1.0, last update: 17.8.2022 ///.
+///.----------------------------------------------------------///.
 import React, {useState, useEffect} from 'react';
 import { Default } from './Default';
-import {  TbHistory } from 'react-icons/tb';
+import { TbHistory } from 'react-icons/tb';
 import { FiSettings } from 'react-icons/fi';
 import { HiMenuAlt1 } from 'react-icons/hi';
-
-///. Simple Chess game - version: 1.0, last update: 14.8.2022 ///.
-///.----------------------------------------------------------///.
 
 export function Chess() {
 // 1)pieces---------------------------------------------------------
     const storageDefault = Default();
-    const [pawnB,knightB,bishopB,rookB,queenB,kingB] = ['♟','♞','♝','♜','♛','♚'];
     const [pawnW,knightW,bishopW,rookW,queenW,kingW] = ['♙','♘','♗','♖','♕','♔'];
-    const allBlack = ['♟','♞','♝','♜','♛','♚'];
+    const [pawnB,knightB,bishopB,rookB,queenB,kingB] = ['♟','♞','♝','♜','♛','♚'];
     const allWhite = ['♙','♘','♗','♖','♕','♔'];
+    const allBlack = ['♟','♞','♝','♜','♛','♚'];
 
 // 2)states---------------------------------------------------------
-    const [historyStorage, setHistoryStorage] = useState(storageDefault);
+    const [onMove, setOnMove] = useState('');
     const [currentField, setCurrentField] = useState('');
     const [currentFigure, setCurrentFigure] = useState('');
-    const [historyLevel, setHistoryLevel] = useState(0);
-    const [onMove, setOnMove] = useState('');
     const [currentPosition, setCurrentPosition] = useState([]);
-    
-    // const [pawnPosition, setPawnPosition] = useState('');
-    // const [knightPosition, setKnightPosition] = useState('');
-    // const [bishopPosition, setBishopPosition] = useState('');
-    // const [rookPosition, setRookPosition] = useState('');
-    // const [queenPosition, setQueenPosition] = useState('');
-    // const [kingPosition, setKingPosition] = useState('');
+    const [possibleMoves, setPossibleMoves] = useState([]);
+    const [check, setCheck] = useState(false);
+    const [historyStorage, setHistoryStorage] = useState(storageDefault);
+    const [historyLevel, setHistoryLevel] = useState(0);
 
 // 3)indexes & fields---------------------------------------------------------
     const setIndexes = () => {
@@ -40,24 +34,113 @@ export function Chess() {
         return ids;
     }
     const indexes = setIndexes();
-
     const setFields = () => {
-       return(indexes.map(id=>(<div className='field'id={id}key={id} onClick={()=>figureMovement(id)}></div>)));
+       return(indexes.map(id=>(<div className='field'id={id}key={id} onClick={()=>pieceMovement(id)}></div>)));
     }
 
-
 // 4)main game logic---------------------------------------------------------
-    const figureMovement = (field) => {
-        const fields = Array.from(document.querySelectorAll('.field'));
-        const clicked = fields[(indexes.indexOf(field))];
+    class Piece {
+        constructor(clickedField, clickedPiece) { 
+            this.clickedField = clickedField;
+            this.clickedPiece = clickedPiece;
+            this.possibleMoves = [];
+        }
+        
+        behavior() {
+            const fields = Array.from(document.querySelectorAll('.field'));
+            const f = fields.indexOf(this.clickedField);
+            const orangeOrange=()=>{
+                this.possibleMoves.map(m=>{if(fields[m]&&fields[m].innerHTML!==kingB&&fields[m].innerHTML!==kingW)fields[m].style.border = 'solid orange 3px'})
+            }
+            switch(this.clickedPiece) {
+            //WHITE PAWN-------------------------------------------------------------------------------
+            case pawnW: 
+            const A = (i)=>fields[i-8].innerHTML===''&&fields[i-16].innerHTML=== ''&& i>47;       //je na startu..............// f-16
+            const B = (i)=>fields[i-8].innerHTML===''&&!allWhite.includes(fields[i-8].innerHTML); //nema pred sebou prekazku..// f-8
+            const C = (i)=>fields[i-7].innerHTML!==''&&!allWhite.includes(fields[i-7].innerHTML); //muze vyhazovat doleva.....// f-7   
+            const D = (i)=>fields[i-9].innerHTML!==''&&!allWhite.includes(fields[i-9].innerHTML); //muze vyhazovat doprava....// f-9
+            //1-pesec ma nejvice moznosti----------------//(A,B,C,D): push(f-7,f-8,f-9,f-16);
+                if (A(f)&&B(f)&&C(f)&&D(f))this.possibleMoves.push(f-16,f-8,f-7,f-9)
+            //2-pesec ma prave 3 moznosti----------------
+                if(A(f)&&B(f)&&C(f))this.possibleMoves.push(f-16,f-8,f-7)
+                if(A(f)&&B(f)&&D(f))this.possibleMoves.push(f-16,f-8,f-9)
+                if(A(f)&&C(f)&&D(f))this.possibleMoves.push(f-16,f-7,f-9) 
+                if(C(f)&&B(f)&&D(f))this.possibleMoves.push(f-7,f-8,f-9)  //cbd 
+            //3-pesec ma prave 2 moznosti----------------
+                if(A(f)&&B(f))this.possibleMoves.push(f-16,f-8)
+                if(A(f)&&C(f))this.possibleMoves.push(f-16,f-7)
+                if(A(f)&&D(f))this.possibleMoves.push(f-16,f-9)
+                if(B(f)&&C(f))this.possibleMoves.push(f-8,f-7)
+                if(B(f)&&D(f))this.possibleMoves.push(f-8,f-9)
+                if(C(f)&&D(f))this.possibleMoves.push(f-7,f-9)
+            //4-pesec ma prave 1 moznost----------------
+                if(A(f))this.possibleMoves.push(f-16)
+                if(B(f))this.possibleMoves.push(f-8)
+                if(C(f))this.possibleMoves.push(f-7)
+                if(D(f))this.possibleMoves.push(f-9)
+                orangeOrange();
+                break;
+            //BLACK PAWN-------------------------------------------------------------------------------        
+            case pawnB:
+            const A2 = (i)=>i<16&&fields[i+8].innerHTML===''&&fields[i+16].innerHTML==='';  //je na startu.....................// f-16
+            const B2 = (i)=>fields[i+8].innerHTML===''&&!allBlack.includes(fields[i+8].innerHTML); //nema pred sebou prekazku..// f-8
+            const C2 = (i)=>fields[i+7].innerHTML!==''&&!allBlack.includes(fields[i+7].innerHTML); //muze vyhazovat doleva.....// f-7
+            const D2 = (i)=>fields[i+9].innerHTML!==''&&!allBlack.includes(fields[i+9].innerHTML); //muze vyhazovat doprava....// f-9
+            //1-pesec ma nejvice moznosti----------------
+                if (A2(f)&&B2(f)&&C2(f)&&D2(f))this.possibleMoves.push(f+16,f+8,f+7,f+9)
+            //2-pesec ma prave 3 moznosti----------------
+                if(A2(f)&&B2(f)&&C2(f))this.possibleMoves.push(f+16,f+8,f+7)
+                if(A2(f)&&B2(f)&&D2(f))this.possibleMoves.push(f+16,f+8,f+9)
+                if(A2(f)&&C2(f)&&D2(f))this.possibleMoves.push(f+16,f+7,f+9)
+                if(C2(f)&&B2(f)&&D2(f))this.possibleMoves.push(f+7,f+8,f+9)
+            //3-pesec ma prave 2 moznosti----------------
+                if(A2(f)&&B2(f))this.possibleMoves.push(f+16,f+8)
+                if(A2(f)&&C2(f))this.possibleMoves.push(f+16,f+7)
+                if(A2(f)&&D2(f))this.possibleMoves.push(f+16,f+9)
+                if(B2(f)&&C2(f))this.possibleMoves.push(f+8,f+7)
+                if(B2(f)&&D2(f))this.possibleMoves.push(f+8,f+9)
+                if(C2(f)&&D2(f))this.possibleMoves.push(f+7,f+9)
+            //4-pesec ma prave 1 moznost----------------
+                if(A2(f))this.possibleMoves.push(f+16)
+                if(B2(f))this.possibleMoves.push(f+8)
+                if(C2(f))this.possibleMoves.push(f+7)
+                if(D2(f))this.possibleMoves.push(f+9)
+                orangeOrange();
+                break;
+        
+            //HORSE-------------------------------------------------------------------------------
+            case ('♘'||'♞') :
+                    console.log('hello I"m horse');
+            }
+        }   
 
-        //1-vyber figury (oznaceni)
+        static pawnForQueen(field, figure) {
+            const fields = Array.from(document.querySelectorAll('.field'));
+            if (figure===pawnW&&!fields[field]-8&&fields.indexOf(field)<8) {
+                console.log(field)
+                field.innerHTML = queenW;
+            }
+            if(figure===pawnB&&fields.indexOf(field)>58) {
+                field.innerHTML = queenB;
+            }
+        }
+    }
+
+    const pieceMovement = (field) => {
+        const fields = Array.from(document.querySelectorAll('.field'));
+        const fieldNumber = indexes.indexOf(field);
+        const clicked = fields[fieldNumber];
+        const clickedValue = clicked.innerHTML;
+    //1-vyber figury (oznaceni)
         if(currentFigure===''&& clicked.innerHTML!==''&& clicked.innerHTML!==currentFigure&& historyLevel===historyStorage.length-1) {
             const pickFigure = () => {
                 fields.forEach(f=>f.style.color = 'black');
                 setCurrentFigure(clicked.innerHTML);
                 setCurrentField(field);
                 clicked.style.color = 'orange';
+                const pieceType = new Piece(clicked, clickedValue);
+                pieceType.behavior();
+                setPossibleMoves(pieceType.possibleMoves);
             }
             if (onMove==='white'&& allWhite.indexOf(clicked.innerHTML)!==-1) {
                 pickFigure();
@@ -67,31 +150,38 @@ export function Chess() {
                 setOnMove('white');
             }
         } 
-        //2-nechci tuto figuru (vraceni)
+    //2-nechci tuto figuru (vraceni)
         else if (currentFigure===clicked.innerHTML&& field===currentField) {
             setCurrentFigure('');
             setCurrentField('');
             (onMove==='black') ? setOnMove('white') : setOnMove('black');
             clicked.style.color = 'black';
+            fields.forEach(f=>f.style.border = 'none');
         } 
-        //3-tah s figurou
+    //3-tah s figurou
         else if (currentFigure!==''&& clicked.innerHTML!==kingB&& clicked.innerHTML!==kingW) {
-            const vanishField = () => {
-                (fields[(indexes.indexOf(currentField))]).innerHTML = '';
-                (fields[(indexes.indexOf(currentField))]).style.color = 'black';
+            const move = () => {
+                const okNow =()=> {
+                    clicked.innerHTML = currentFigure;
+                    setCurrentFigure('');
+                    setHistoryLevel((previous)=>previous+1);
+                    new History(historyLevel, historyStorage);
+                    Piece.pawnForQueen(clicked, currentFigure);
+                    (fields[(indexes.indexOf(currentField))]).innerHTML = '';
+                    (fields[(indexes.indexOf(currentField))]).style.color = 'black';
+                    fields.forEach(f=>f.style.border = 'none');
+                }
+                if(possibleMoves.includes(fieldNumber)) { 
+                    okNow();
+                }
+                else if ((currentFigure!==pawnB&&currentFigure!==pawnW)) {
+                    okNow();
+                }
             }
             if (onMove==='black'&& allWhite.indexOf(clicked.innerHTML)===-1) {
-                clicked.innerHTML = currentFigure;
-                setCurrentFigure('');
-                vanishField();
-                setHistoryLevel((previous)=>previous+1);
-                new History(historyLevel, historyStorage);
+                move();
             } else if (onMove==='white'&& allBlack.indexOf(clicked.innerHTML)===-1) {
-                clicked.innerHTML = currentFigure;
-                setCurrentFigure('');
-                vanishField();
-                setHistoryLevel((previous)=>previous+1);
-                new History(historyLevel, historyStorage);
+                move();
             }
         }
     }
@@ -106,13 +196,13 @@ export function Chess() {
 
          setGameboard() {
             const black = [
-                1,3,5,7, 8,10,12,14, 
-                17,19,21,23, 24,26,28,30, 
-                33,35,37,39, 40,42,44,46, 
-                49,51,53,55, 56,58,60,62 
-            ]
+            1,3,5,7,     8,10,12,14, 
+            17,19,21,23, 24,26,28,30, 
+            33,35,37,39, 40,42,44,46, 
+            49,51,53,55, 56,58,60,62];
             black.map(b=>this.fields[b].style.background='lightblue');
             this.fields.forEach(f=>f.style.color = 'black');
+            this.fields.forEach(f=>f.style.border = 'none');
             this.fields.map(f=>f.innerHTML='');
             setCurrentField('');
             setCurrentFigure('');
@@ -165,7 +255,6 @@ export function Chess() {
 
     const listHistory = (click) => {
         const fields = (Array.from(document.querySelectorAll('.field')));
-
         if(historyLevel>0 &&click ==='back') {
             let figures = [];
             historyStorage[historyLevel-1].forEach(obj=>figures.push(obj.Figure));
@@ -197,7 +286,7 @@ export function Chess() {
     if (onMove==='') {
         setTimeout(()=>{
             new Game();
-        },20);
+        },42);
     }
 
     useEffect(()=>{
