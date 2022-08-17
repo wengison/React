@@ -2,7 +2,7 @@
 ///.----------------------------------------------------------///.
 import React, {useState, useEffect} from 'react';
 import { Default } from './Default';
-import { TbHistory } from 'react-icons/tb';
+import { TbHeartMinus, TbHistory } from 'react-icons/tb';
 import { FiSettings } from 'react-icons/fi';
 import { HiMenuAlt1 } from 'react-icons/hi';
 
@@ -13,6 +13,8 @@ export function Chess() {
     const [pawnB,knightB,bishopB,rookB,queenB,kingB] = ['♟','♞','♝','♜','♛','♚'];
     const allWhite = ['♙','♘','♗','♖','♕','♔'];
     const allBlack = ['♟','♞','♝','♜','♛','♚'];
+
+    const [horseMoves, setHorseMoves] = useState('');
 
 // 2)states---------------------------------------------------------
     const [onMove, setOnMove] = useState('');
@@ -43,8 +45,11 @@ export function Chess() {
         constructor(clickedField, clickedPiece) { 
             this.clickedField = clickedField;
             this.clickedPiece = clickedPiece;
+            // this.allFields = Array.from(document.querySelectorAll('.field'));
+            // this.field = fields.indexOf(this.clickedField);
             this.possibleMoves = [];
         }
+
         
         behavior() {
             const fields = Array.from(document.querySelectorAll('.field'));
@@ -107,17 +112,61 @@ export function Chess() {
                 if(D2(f))this.possibleMoves.push(f+9)
                 orangeOrange();
                 break;
-        
-            //HORSE-------------------------------------------------------------------------------
-            case ('♘'||'♞') :
-                    console.log('hello I"m horse');
+            //KNIGHT-------------------------------------------------------------------------------
+            case knightW :
+                this.knightBehavior(allWhite);
+                break;
+            case knightB:
+                this.knightBehavior(allBlack);
             }
         }   
+
+        knightBehavior(group) {
+            const fields = Array.from(document.querySelectorAll('.field'));
+            const f = fields.indexOf(this.clickedField);
+            const orangeOrange=()=>{
+                this.possibleMoves.map(m=>{if(fields[m]&&fields[m].innerHTML!==kingB&&fields[m].innerHTML!==kingW)fields[m].style.border = 'solid orange 3px'})
+            }
+            //1) //horse -15,-17,-6,-10,+6,+10,+15,+17
+                this.possibleMoves.push(f-17,f-15,f-10,f-6,f+6,f+10,f+15,f+17);
+            //2) //if exist                                                   
+                const knightMovesW = this.possibleMoves.filter(f=>fields[f]);
+                const knightMovesW2 = knightMovesW.filter(f=>!group.includes(fields[f].innerHTML));
+            //3) vylouceni pri krajnich pozicich vlevo/vpravo
+               // A sloupec=> nesmi -17,-10,+6,+15
+               //    for(let i=0;i<57;i+8){horseA.push(i)} ???
+                const horseA = [0,8,16,24,32,40,48,56];
+                if(horseA.includes(f)) {
+                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-17&&x!==f-10&&x!==f+6&&x!==f+15);
+                } 
+                // this.possibleMoves = horseA;
+                // B sloupec=> nesmi -10,+6
+                const horseB = [1,9,17,25,33,41,49,57];
+                if(horseB.includes(f)) {
+                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-10&&x!==f+6);
+                }
+                // this.possibleMoves = horseB;
+                // G sloupec=> nesmi -6,+10
+                const horseG = [6,14,22,30,38,46,54,62];
+                if(horseG.includes(f)) {
+                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-6&&x!==f+10);
+                }
+                // this.possibleMoves = horseG;
+                // H sloupec=> nesmi -15,-6,+10,+17
+                let horseH = [7,15,23,31,39,47,55,63];
+                if(horseH.includes(f)) {
+                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-15&&x!==f-6&&x!==f+10&&x!==f+17);
+                }
+                else if (!horseA.includes(f)&&!horseB.includes(f)&&!horseG.includes(f)&&!horseH.includes(f)){
+                    this.possibleMoves = knightMovesW2;
+                }
+                // this.orangeSolid();
+                orangeOrange();
+        }
 
         static pawnForQueen(field, figure) {
             const fields = Array.from(document.querySelectorAll('.field'));
             if (figure===pawnW&&!fields[field]-8&&fields.indexOf(field)<8) {
-                console.log(field)
                 field.innerHTML = queenW;
             }
             if(figure===pawnB&&fields.indexOf(field)>58) {
@@ -141,6 +190,7 @@ export function Chess() {
                 const pieceType = new Piece(clicked, clickedValue);
                 pieceType.behavior();
                 setPossibleMoves(pieceType.possibleMoves);
+                // console.log(pieceType.possibleMoves);
             }
             if (onMove==='white'&& allWhite.indexOf(clicked.innerHTML)!==-1) {
                 pickFigure();
@@ -161,7 +211,7 @@ export function Chess() {
     //3-tah s figurou
         else if (currentFigure!==''&& clicked.innerHTML!==kingB&& clicked.innerHTML!==kingW) {
             const move = () => {
-                const okNow =()=> {
+                const moveNow =()=> {
                     clicked.innerHTML = currentFigure;
                     setCurrentFigure('');
                     setHistoryLevel((previous)=>previous+1);
@@ -171,13 +221,18 @@ export function Chess() {
                     (fields[(indexes.indexOf(currentField))]).style.color = 'black';
                     fields.forEach(f=>f.style.border = 'none');
                 }
+                //klikam na policko, ktere se nachazi v predem definovanych pozizich => pokud vaci true=> "move()" muze probehnout =>
+                //pokud vraci false => jde na dalsi podminku, kde je potreba zamezit definovanym figuram (zatim pawn, knight) volny pohyb..
                 if(possibleMoves.includes(fieldNumber)) { 
-                    okNow();
-                }
-                else if ((currentFigure!==pawnB&&currentFigure!==pawnW)) {
-                    okNow();
+                    console.log(currentFigure);
+                    moveNow();
+                } 
+                if ((currentFigure!==pawnB&&currentFigure!==pawnW&&currentFigure!==knightW&&currentFigure!==knightB)) {          
+                    console.log('wtf');
+                    moveNow();
                 }
             }
+
             if (onMove==='black'&& allWhite.indexOf(clicked.innerHTML)===-1) {
                 move();
             } else if (onMove==='white'&& allBlack.indexOf(clicked.innerHTML)===-1) {
@@ -255,9 +310,9 @@ export function Chess() {
 
     const listHistory = (click) => {
         const fields = (Array.from(document.querySelectorAll('.field')));
-        if(historyLevel>0 &&click ==='back') {
+        if(historyLevel>=1 &&click ==='back') {
             let figures = [];
-            historyStorage[historyLevel-1].forEach(obj=>figures.push(obj.Figure));
+            historyStorage[historyLevel-1].map(obj=>figures.push(obj.Figure));
             setHistoryLevel((previous)=>previous-1)
             for (let i=0;i<64;i++) {
                 fields[i].innerHTML = figures[0];
@@ -266,7 +321,7 @@ export function Chess() {
         } 
         if(historyLevel<historyStorage.length-1&& click==='forth') {
             let figures = [];
-            historyStorage[historyLevel+1].forEach(obj=>figures.push(obj.Figure));
+            historyStorage[historyLevel+1].map(obj=>figures.push(obj.Figure));
             setHistoryLevel((previous)=>previous+1)
             for (let i=0;i<64;i++) {
                 fields[i].innerHTML = figures[0];
@@ -291,7 +346,7 @@ export function Chess() {
 
     useEffect(()=>{
         console.log(currentPosition);
-    },[currentPosition]);
+    },[currentPosition, historyLevel]);
 
 // 7)render---------------------------------------------------------
   return (
