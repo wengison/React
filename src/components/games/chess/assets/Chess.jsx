@@ -1,20 +1,17 @@
-///. Simple Chess game - version: 1.0, last update: 17.8.2022 ///.
+///. Simple Chess game - version: 1.0, last update: 23.8.2022 ///.
 ///.----------------------------------------------------------///.
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Default } from './Default';
-import { TbHeartMinus, TbHistory } from 'react-icons/tb';
+import { TbHistory } from 'react-icons/tb';
 import { FiSettings } from 'react-icons/fi';
 import { HiMenuAlt1 } from 'react-icons/hi';
 
 export function Chess() {
 // 1)pieces---------------------------------------------------------
-    const storageDefault = Default();
     const [pawnW,knightW,bishopW,rookW,queenW,kingW] = ['♙','♘','♗','♖','♕','♔'];
     const [pawnB,knightB,bishopB,rookB,queenB,kingB] = ['♟','♞','♝','♜','♛','♚'];
     const allWhite = ['♙','♘','♗','♖','♕','♔'];
     const allBlack = ['♟','♞','♝','♜','♛','♚'];
-
-    const [horseMoves, setHorseMoves] = useState('');
 
 // 2)states---------------------------------------------------------
     const [onMove, setOnMove] = useState('');
@@ -22,224 +19,282 @@ export function Chess() {
     const [currentFigure, setCurrentFigure] = useState('');
     const [currentPosition, setCurrentPosition] = useState([]);
     const [possibleMoves, setPossibleMoves] = useState([]);
-    const [check, setCheck] = useState(false);
-    const [historyStorage, setHistoryStorage] = useState(storageDefault);
+    // const [check, setCheck] = useState(false);
+    const [historyStorage, setHistoryStorage] = useState(Default);
     const [historyLevel, setHistoryLevel] = useState(0);
+
 
 // 3)indexes & fields---------------------------------------------------------
     const setIndexes = () => {
         let ids = [];
-        const rows = ['A','B','C','D','E','F','G','H'];
+        const columns = ['A','B','C','D','E','F','G','H'];
         for (let i=8; i>0; i--) {
-            rows.forEach(line=>ids.push(line+i))
+            columns.forEach(col=>ids.push(col+i))
         }
         return ids;
     }
+
     const indexes = setIndexes();
     const setFields = () => {
-       return(indexes.map(id=>(<div className='field'id={id}key={id} onClick={()=>pieceMovement(id)}></div>)));
+       return(indexes.map(id=>(
+       <div className='field' id={id} key={id} 
+       onClick={()=>Piece.movement(id)}>
+       </div>
+       )));
     }
+    
 
 // 4)main game logic---------------------------------------------------------
     class Piece {
         constructor(clickedField, clickedPiece) { 
             this.clickedField = clickedField;
             this.clickedPiece = clickedPiece;
-            // this.allFields = Array.from(document.querySelectorAll('.field'));
-            // this.field = fields.indexOf(this.clickedField);
+            this.fields = Array.from(document.querySelectorAll('.field'));
+            this.f = this.fields.indexOf(this.clickedField);
             this.possibleMoves = [];
+            this.orangeOrange = ()=>{
+                this.possibleMoves.forEach(m=>{
+                    const t = this.fields[m]
+                    if(t&&t.innerHTML!==kingB&&t.innerHTML!==kingW){
+                        t.style.border = 'solid orange 3px'
+                    }
+                });
+            }
         }
 
-        
         behavior() {
-            const fields = Array.from(document.querySelectorAll('.field'));
-            const f = fields.indexOf(this.clickedField);
-            const orangeOrange=()=>{
-                this.possibleMoves.map(m=>{if(fields[m]&&fields[m].innerHTML!==kingB&&fields[m].innerHTML!==kingW)fields[m].style.border = 'solid orange 3px'})
-            }
             switch(this.clickedPiece) {
-            //WHITE PAWN-------------------------------------------------------------------------------
-            case pawnW: 
-            const A = (i)=>fields[i-8].innerHTML===''&&fields[i-16].innerHTML=== ''&& i>47;       //je na startu..............// f-16
-            const B = (i)=>fields[i-8].innerHTML===''&&!allWhite.includes(fields[i-8].innerHTML); //nema pred sebou prekazku..// f-8
-            const C = (i)=>fields[i-7].innerHTML!==''&&!allWhite.includes(fields[i-7].innerHTML); //muze vyhazovat doleva.....// f-7   
-            const D = (i)=>fields[i-9].innerHTML!==''&&!allWhite.includes(fields[i-9].innerHTML); //muze vyhazovat doprava....// f-9
-            //1-pesec ma nejvice moznosti----------------//(A,B,C,D): push(f-7,f-8,f-9,f-16);
-                if (A(f)&&B(f)&&C(f)&&D(f))this.possibleMoves.push(f-16,f-8,f-7,f-9)
-            //2-pesec ma prave 3 moznosti----------------
-                if(A(f)&&B(f)&&C(f))this.possibleMoves.push(f-16,f-8,f-7)
-                if(A(f)&&B(f)&&D(f))this.possibleMoves.push(f-16,f-8,f-9)
-                if(A(f)&&C(f)&&D(f))this.possibleMoves.push(f-16,f-7,f-9) 
-                if(C(f)&&B(f)&&D(f))this.possibleMoves.push(f-7,f-8,f-9)  //cbd 
-            //3-pesec ma prave 2 moznosti----------------
-                if(A(f)&&B(f))this.possibleMoves.push(f-16,f-8)
-                if(A(f)&&C(f))this.possibleMoves.push(f-16,f-7)
-                if(A(f)&&D(f))this.possibleMoves.push(f-16,f-9)
-                if(B(f)&&C(f))this.possibleMoves.push(f-8,f-7)
-                if(B(f)&&D(f))this.possibleMoves.push(f-8,f-9)
-                if(C(f)&&D(f))this.possibleMoves.push(f-7,f-9)
-            //4-pesec ma prave 1 moznost----------------
-                if(A(f))this.possibleMoves.push(f-16)
-                if(B(f))this.possibleMoves.push(f-8)
-                if(C(f))this.possibleMoves.push(f-7)
-                if(D(f))this.possibleMoves.push(f-9)
-                orangeOrange();
-                break;
-            //BLACK PAWN-------------------------------------------------------------------------------        
-            case pawnB:
-            const A2 = (i)=>i<16&&fields[i+8].innerHTML===''&&fields[i+16].innerHTML==='';  //je na startu.....................// f-16
-            const B2 = (i)=>fields[i+8].innerHTML===''&&!allBlack.includes(fields[i+8].innerHTML); //nema pred sebou prekazku..// f-8
-            const C2 = (i)=>fields[i+7].innerHTML!==''&&!allBlack.includes(fields[i+7].innerHTML); //muze vyhazovat doleva.....// f-7
-            const D2 = (i)=>fields[i+9].innerHTML!==''&&!allBlack.includes(fields[i+9].innerHTML); //muze vyhazovat doprava....// f-9
-            //1-pesec ma nejvice moznosti----------------
-                if (A2(f)&&B2(f)&&C2(f)&&D2(f))this.possibleMoves.push(f+16,f+8,f+7,f+9)
-            //2-pesec ma prave 3 moznosti----------------
-                if(A2(f)&&B2(f)&&C2(f))this.possibleMoves.push(f+16,f+8,f+7)
-                if(A2(f)&&B2(f)&&D2(f))this.possibleMoves.push(f+16,f+8,f+9)
-                if(A2(f)&&C2(f)&&D2(f))this.possibleMoves.push(f+16,f+7,f+9)
-                if(C2(f)&&B2(f)&&D2(f))this.possibleMoves.push(f+7,f+8,f+9)
-            //3-pesec ma prave 2 moznosti----------------
-                if(A2(f)&&B2(f))this.possibleMoves.push(f+16,f+8)
-                if(A2(f)&&C2(f))this.possibleMoves.push(f+16,f+7)
-                if(A2(f)&&D2(f))this.possibleMoves.push(f+16,f+9)
-                if(B2(f)&&C2(f))this.possibleMoves.push(f+8,f+7)
-                if(B2(f)&&D2(f))this.possibleMoves.push(f+8,f+9)
-                if(C2(f)&&D2(f))this.possibleMoves.push(f+7,f+9)
-            //4-pesec ma prave 1 moznost----------------
-                if(A2(f))this.possibleMoves.push(f+16)
-                if(B2(f))this.possibleMoves.push(f+8)
-                if(C2(f))this.possibleMoves.push(f+7)
-                if(D2(f))this.possibleMoves.push(f+9)
-                orangeOrange();
-                break;
-            //KNIGHT-------------------------------------------------------------------------------
-            case knightW :
-                this.knightBehavior(allWhite);
-                break;
-            case knightB:
-                this.knightBehavior(allBlack);
+                case pawnW: 
+                    this.pawnBehavior(allWhite);
+                    break;
+                case pawnB:
+                    this.pawnBehavior(allBlack);
+                    break;
+                case knightW :
+                    this.knightBehavior(allWhite);
+                    break;
+                case knightB:
+                    this.knightBehavior(allBlack);
+                    break;
+                case bishopW:
+                    this.bishopBehavior(allWhite);
+                    break;
+                case bishopB:
+                    this.bishopBehavior(allBlack);
+                    break;
+                case rookW:
+                    this.rookBehavior(allWhite);
+                    break;
+                case rookB:
+                    this.rookBehavior(allBlack);
+                    break;
+                case queenW:
+                    console.log(queenW);
+                    break;
+                case queenB:
+                    console.log(queenB);
+                    break;
+                case kingW: 
+                    console.log(kingW);
+                    break;
+                case kingB: 
+                    console.log(kingB);
+                    break;
+                default: return false;
             }
         }   
 
-        knightBehavior(group) {
-            const fields = Array.from(document.querySelectorAll('.field'));
-            const f = fields.indexOf(this.clickedField);
-            const orangeOrange=()=>{
-                this.possibleMoves.map(m=>{if(fields[m]&&fields[m].innerHTML!==kingB&&fields[m].innerHTML!==kingW)fields[m].style.border = 'solid orange 3px'})
-            }
-            //1) //horse -15,-17,-6,-10,+6,+10,+15,+17
-                this.possibleMoves.push(f-17,f-15,f-10,f-6,f+6,f+10,f+15,f+17);
-            //2) //if exist                                                   
-                const knightMovesW = this.possibleMoves.filter(f=>fields[f]);
-                const knightMovesW2 = knightMovesW.filter(f=>!group.includes(fields[f].innerHTML));
-            //3) vylouceni pri krajnich pozicich vlevo/vpravo
-               // A sloupec=> nesmi -17,-10,+6,+15
-               //    for(let i=0;i<57;i+8){horseA.push(i)} ???
-                const horseA = [0,8,16,24,32,40,48,56];
-                if(horseA.includes(f)) {
-                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-17&&x!==f-10&&x!==f+6&&x!==f+15);
-                } 
-                // this.possibleMoves = horseA;
-                // B sloupec=> nesmi -10,+6
-                const horseB = [1,9,17,25,33,41,49,57];
-                if(horseB.includes(f)) {
-                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-10&&x!==f+6);
-                }
-                // this.possibleMoves = horseB;
-                // G sloupec=> nesmi -6,+10
-                const horseG = [6,14,22,30,38,46,54,62];
-                if(horseG.includes(f)) {
-                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-6&&x!==f+10);
-                }
-                // this.possibleMoves = horseG;
-                // H sloupec=> nesmi -15,-6,+10,+17
-                let horseH = [7,15,23,31,39,47,55,63];
-                if(horseH.includes(f)) {
-                    this.possibleMoves=knightMovesW2.filter(x=>x!==f-15&&x!==f-6&&x!==f+10&&x!==f+17);
-                }
-                else if (!horseA.includes(f)&&!horseB.includes(f)&&!horseG.includes(f)&&!horseH.includes(f)){
-                    this.possibleMoves = knightMovesW2;
-                }
-                // this.orangeSolid();
-                orangeOrange();
+        pawnBehavior(group) {
+            const fields = this.fields; 
+            const f = this.f;
+            const possible = (...pars) => this.possibleMoves.push(...pars);
+            let [start, forth, left, right, position] = [];
+            if(group===allWhite)[start, forth, left, right, position] = [f-16,f-8,f-7,f-9,f>47];
+            if(group===allBlack)[start, forth, left, right, position] = [f+16,f+8,f+7,f+9,f<17];
+            //situace:
+            const A = fields[forth].innerHTML===''&& fields[start].innerHTML=== ''&& position;     //start //f+-16
+            const B = fields[forth].innerHTML===''&& !group.includes(fields[forth].innerHTML);     //forth //f+-8
+            const C = fields[left].innerHTML!==''&& !group.includes(fields[left].innerHTML);       //left  //f+-7   
+            const D = fields[right].innerHTML!==''&& !group.includes(fields[right].innerHTML);     //right //f+-9
+            //kombinace podminek:
+            if(A&&B&&C&&D)possible(start,forth,left,right)
+            if(A&&B&&C)possible(start,forth,left)
+            if(A&&B&&D)possible(start,forth,right)
+            if(A&&C&&D)possible(start,left,right) 
+            if(C&&B&&D)possible(left,forth,right)  
+            if(A&&B)possible(start,forth)
+            if(A&&C)possible(start,left)
+            if(A&&D)possible(start,right)
+            if(B&&C)possible(forth,left)
+            if(B&&D)possible(forth,right)
+            if(C&&D)possible(left,right)
+            if(A)possible(start)
+            if(B)possible(forth)
+            if(C)possible(left)
+            if(D)possible(right)
+            //vykresleni:
+            this.orangeOrange();
         }
+
+        knightBehavior(group) {
+            const fields = this.fields;
+            const f = this.f;
+            const A = [0,8,16,24,32,40,48,56];
+            const B = [1,9,17,25,33,41,49,57];
+            const G = [6,14,22,30,38,46,54,62];
+            const H = [7,15,23,31,39,47,55,63];
+        //1) //horse -15,-17,-6,-10,+6,+10,+15,+17
+            this.possibleMoves.push(f-17,f-15,f-10,f-6,f+6,f+10,f+15,f+17);
+        //2) //if exist, group                                                  
+            const possible = this.possibleMoves.filter(f=>fields[f]).filter(f=>!group.includes(fields[f].innerHTML));
+        //3) vylouceni pri krajnich pozicich vlevo/vpravo
+            // A sloupec=> nesmi -17,-10,+6,+15
+            if(A.includes(f))this.possibleMoves=possible.filter(x=>x!==f-17&&x!==f-10&&x!==f+6&&x!==f+15);
+            // B sloupec=> nesmi -10,+6
+            if(B.includes(f))this.possibleMoves=possible.filter(x=>x!==f-10&&x!==f+6);
+            // G sloupec=> nesmi -6,+10
+            if(G.includes(f))this.possibleMoves=possible.filter(x=>x!==f-6&&x!==f+10);
+            // H sloupec=> nesmi -15,-6,+10,+17
+            if(H.includes(f))this.possibleMoves=possible.filter(x=>x!==f-15&&x!==f-6&&x!==f+10&&x!==f+17);
+            else if (!A.includes(f)&&!B.includes(f)&&!G.includes(f)&&!H.includes(f))this.possibleMoves = possible;
+            this.orangeOrange();
+        }
+
+        bishopBehavior(group) {
+            const fields = this.fields;
+            const f = this.f;
+            const whiteFields = [
+                [0,9,18,27,36,45,54,63],[2,11,20,29,38,47],[16,25,34,43,52,61],[4,13,22,31],[32,41,50,59],[6,15],[48,57],
+                [2,9,16],[47,54,61],[4,11,18,25,32],[31,38,45,52,59],[6,13,20,27,34,41,48],[15,22,29,36,43,50,57]
+            ];
+            const blackFields = [
+                [1,8],[3,10,17,24],[5,12,19,26,33,40],[7,14,21,28,35,42,49,56],[23,30,37,44,51,58],[39,46,53,60],[55,62],
+                [5,14,23],[3,12,21,30,39],[1,10,19,28,37,46,55],[8,17,26,35,44,33,62],[24,33,42,51,60],[40,49,58]
+            ];   
+            // const A = [[0,9,18,27,36,45,54,63],[2,11,20,29,38,47],[16,25,34,43,52,61],[4,13,22,31],[32,41,50,59],[6,15],[48,57]];
+            // const B =[[2,9,15],[47,54,61],[4,11,18,25,32],[31,38,45,52,59],[6,13,20,27,34,41,48],[15,22,29,36,43,50,57]];
+            const possible= [];
+            let occupied = [];
+            const [shorterA, shorterB] = [[],[]]
+            const [shorterAA,shorterAB, shorterBA, shorterBB] = [[],[],[],[]];
+            whiteFields.forEach(arr=>(arr.includes(f))? possible.push(arr): false);
+            blackFields.forEach(arr=>(arr.includes(f))? possible.push(arr): false);
+            possible.forEach(ar=>{
+                ar.forEach(num=>{
+                    if(fields[num].innerHTML&&fields[num].innerHTML!==fields[f].innerHTML)occupied.push(num)
+                })
+            });
+            possible.forEach(ar=>{
+                ar.forEach(num=>{
+                    if(num<f)shorterA.push(num);
+                    if(num>f)shorterB.push(num);
+                })
+            });
+            let [actualA, actualB,actualC, actualD] = [-1,-1,-1,-1];
+            const short = (arr,s1,s2,a1,a2)=> {
+                arr.forEach(num=>{
+                    if(num>a1) {
+                        s1.push(num)
+                        a1=num;
+                    } else if(num>a2){
+                        a1=100;
+                        s2.push(num)
+                        a2=num;
+                    }
+                })
+            }
+            short(shorterA, shorterAA, shorterAB, actualA, actualB);
+            short(shorterB, shorterBA, shorterBB, actualC, actualD);
+            shorterAA.reverse();
+            shorterAB.reverse();
+            const barrier= (arr, possible)=> {
+                arr.find(num=>{
+                    possible.push(num);
+                    return fields[num].innerHTML!==''
+                })
+            }
+            const final = [shorterAA,shorterAB,shorterBB,shorterBA];
+            final.forEach(f=>barrier(f, this.possibleMoves));
+            this.possibleMoves = this.possibleMoves.filter(e=>!group.includes(fields[e].innerHTML));
+            this.orangeOrange();
+        }
+
+
+        rookBehavior(group) {
+            // const fields = this.fields;
+            // const f = this.f;
+            //conditions for rook
+            //smer (doleva) a) -1 => push => const arrLeftRook = []  leftInner if element.innerHTML!=='' => indexOf(thisElement)
+            //smer (doprava) b) +1 => push => const arrRightRook = []
+            //smer (nahoru) c) +8 => push => const arrUpRook = []
+            //smer (dolu) d) -8 => push => const arrDown = []
+        }
+
+
 
         static pawnForQueen(field, figure) {
             const fields = Array.from(document.querySelectorAll('.field'));
-            if (figure===pawnW&&!fields[field]-8&&fields.indexOf(field)<8) {
-                field.innerHTML = queenW;
-            }
-            if(figure===pawnB&&fields.indexOf(field)>58) {
-                field.innerHTML = queenB;
+            if(figure===pawnW&&!fields[field]-8&&fields.indexOf(field)<8)field.innerHTML = queenW;
+            if(figure===pawnB&&fields.indexOf(field)>58)field.innerHTML = queenB;
+        }
+
+        static movement(id) {
+            const fields = Array.from(document.querySelectorAll('.field'));
+            const fieldNumber = indexes.indexOf(id);
+            const clicked = fields[fieldNumber];
+            const clickedValue = clicked.innerHTML;
+        //1-vyber figury (oznaceni)
+            if(currentFigure===''&& clicked.innerHTML!==''&& clicked.innerHTML!==currentFigure&& historyLevel===historyStorage.length-1) {
+                const pickFigure = () => {
+                    fields.forEach(f=>f.style.color = 'black');
+                    setCurrentFigure(clicked.innerHTML);
+                    setCurrentField(id);
+                    clicked.style.color = 'orange';
+                    const pieceType = new Piece(clicked, clickedValue);
+                    pieceType.behavior();
+                    setPossibleMoves(pieceType.possibleMoves);
+                }
+                if (onMove==='white'&& allWhite.indexOf(clicked.innerHTML)!==-1) {
+                    pickFigure();
+                    setOnMove('black');
+                } else if (onMove==='black'&& allBlack.indexOf(clicked.innerHTML)!==-1) {
+                    pickFigure();
+                    setOnMove('white');
+                }
+            } 
+        //2-nechci tuto figuru (vraceni)
+            else if (currentFigure===clicked.innerHTML&& id===currentField) {
+                setCurrentFigure('');
+                setCurrentField('');
+                (onMove==='black') ? setOnMove('white') : setOnMove('black');
+                clicked.style.color = 'black';
+                fields.forEach(f=>f.style.border = 'none');
+            } 
+        //3-tah s figurou
+            else if (currentFigure!==''&& clicked.innerHTML!==kingB&& clicked.innerHTML!==kingW) {
+                const move = () => {
+                    const moveNow =()=> {
+                        clicked.innerHTML = currentFigure;
+                        setCurrentFigure('');
+                        setHistoryLevel((previous)=>previous+1);
+                        new History(historyLevel+1, historyStorage);
+                        Piece.pawnForQueen(clicked, currentFigure);
+                        (fields[(indexes.indexOf(currentField))]).innerHTML = '';
+                        (fields[(indexes.indexOf(currentField))]).style.color = 'black';
+                        fields.forEach(f=>f.style.border = 'none');
+                    }
+                    //klikam na policko, ktere se nachazi v predem definovanych pozizich => pokud vaci true=> "moveNow()" muze probehnout =>
+                    //pokud vraci false => jde na dalsi podminku, kde je potreba zamezit definovanym figuram (zatim pawn, knight,bishop) volny pohyb..
+                    if(possibleMoves.includes(fieldNumber))moveNow();
+                    if((currentFigure!==pawnB&&currentFigure!==pawnW&&currentFigure!==knightW&&currentFigure!==knightB)&&currentFigure!==bishopW&&currentFigure!==bishopB)moveNow();
+                }
+
+                if (onMove==='black'&& allWhite.indexOf(clicked.innerHTML)===-1)move();
+                else if (onMove==='white'&& allBlack.indexOf(clicked.innerHTML)===-1)move();
             }
         }
     }
 
-    const pieceMovement = (field) => {
-        const fields = Array.from(document.querySelectorAll('.field'));
-        const fieldNumber = indexes.indexOf(field);
-        const clicked = fields[fieldNumber];
-        const clickedValue = clicked.innerHTML;
-    //1-vyber figury (oznaceni)
-        if(currentFigure===''&& clicked.innerHTML!==''&& clicked.innerHTML!==currentFigure&& historyLevel===historyStorage.length-1) {
-            const pickFigure = () => {
-                fields.forEach(f=>f.style.color = 'black');
-                setCurrentFigure(clicked.innerHTML);
-                setCurrentField(field);
-                clicked.style.color = 'orange';
-                const pieceType = new Piece(clicked, clickedValue);
-                pieceType.behavior();
-                setPossibleMoves(pieceType.possibleMoves);
-                // console.log(pieceType.possibleMoves);
-            }
-            if (onMove==='white'&& allWhite.indexOf(clicked.innerHTML)!==-1) {
-                pickFigure();
-                setOnMove('black');
-            } else if (onMove==='black'&& allBlack.indexOf(clicked.innerHTML)!==-1) {
-                pickFigure();
-                setOnMove('white');
-            }
-        } 
-    //2-nechci tuto figuru (vraceni)
-        else if (currentFigure===clicked.innerHTML&& field===currentField) {
-            setCurrentFigure('');
-            setCurrentField('');
-            (onMove==='black') ? setOnMove('white') : setOnMove('black');
-            clicked.style.color = 'black';
-            fields.forEach(f=>f.style.border = 'none');
-        } 
-    //3-tah s figurou
-        else if (currentFigure!==''&& clicked.innerHTML!==kingB&& clicked.innerHTML!==kingW) {
-            const move = () => {
-                const moveNow =()=> {
-                    clicked.innerHTML = currentFigure;
-                    setCurrentFigure('');
-                    setHistoryLevel((previous)=>previous+1);
-                    new History(historyLevel, historyStorage);
-                    Piece.pawnForQueen(clicked, currentFigure);
-                    (fields[(indexes.indexOf(currentField))]).innerHTML = '';
-                    (fields[(indexes.indexOf(currentField))]).style.color = 'black';
-                    fields.forEach(f=>f.style.border = 'none');
-                }
-                //klikam na policko, ktere se nachazi v predem definovanych pozizich => pokud vaci true=> "move()" muze probehnout =>
-                //pokud vraci false => jde na dalsi podminku, kde je potreba zamezit definovanym figuram (zatim pawn, knight) volny pohyb..
-                if(possibleMoves.includes(fieldNumber)) { 
-                    console.log(currentFigure);
-                    moveNow();
-                } 
-                if ((currentFigure!==pawnB&&currentFigure!==pawnW&&currentFigure!==knightW&&currentFigure!==knightB)) {          
-                    console.log('wtf');
-                    moveNow();
-                }
-            }
-
-            if (onMove==='black'&& allWhite.indexOf(clicked.innerHTML)===-1) {
-                move();
-            } else if (onMove==='white'&& allBlack.indexOf(clicked.innerHTML)===-1) {
-                move();
-            }
-        }
-    }
 
 // 5)game preparation---------------------------------------------------------
     class Game {
@@ -247,6 +302,14 @@ export function Chess() {
             this.time = time;
             this.fields = Array.from(document.querySelectorAll('.field'));
             this.gameboard = this.setGameboard();
+        }
+
+        setPlayer() {
+
+        }
+
+        setTime() {
+
         }
 
          setGameboard() {
@@ -262,7 +325,7 @@ export function Chess() {
             setCurrentField('');
             setCurrentFigure('');
             setOnMove('white');
-            setHistoryStorage(storageDefault);
+            setHistoryStorage(Default);
             setHistoryLevel(0);
             document.querySelector('.play-btn').title = 'Click to start';
         }
@@ -285,10 +348,10 @@ export function Chess() {
             this.level = level;
             this.history = history;
             this.fields = Array.from(document.querySelectorAll('.field'));
-            this.report = this.write();
+            this.report = this.save();
         }
 
-        write() {
+        save() {
             const positions = [];
             this.fields.forEach(f=>{
                 if (f.innerHTML!==''||f.innerHTML==='') {
@@ -301,6 +364,7 @@ export function Chess() {
                     positions.push(position);
                 }
             });
+            // console.log(this.level);
             this.history.push(positions);
             setHistoryStorage(this.history);
             setCurrentPosition(historyStorage[historyLevel]);
@@ -310,19 +374,21 @@ export function Chess() {
 
     const listHistory = (click) => {
         const fields = (Array.from(document.querySelectorAll('.field')));
-        if(historyLevel>=1 &&click ==='back') {
+        // fields.forEach(f=>f.innerHTML='');
+        if(historyLevel>0 &&click ==='back') {
             let figures = [];
+            setHistoryLevel((previous)=>previous-1);
             historyStorage[historyLevel-1].map(obj=>figures.push(obj.Figure));
-            setHistoryLevel((previous)=>previous-1)
-            for (let i=0;i<64;i++) {
-                fields[i].innerHTML = figures[0];
-                figures.shift();
-            } 
+            // for (let i=0;i<64;i++) {
+            //     // fields[i].innerHTML = figures[0];
+            //     figures.shift();
+            // } 
+                console.log(figures)
         } 
         if(historyLevel<historyStorage.length-1&& click==='forth') {
             let figures = [];
-            historyStorage[historyLevel+1].map(obj=>figures.push(obj.Figure));
             setHistoryLevel((previous)=>previous+1)
+            historyStorage[historyLevel+1].map(obj=>figures.push(obj.Figure));
             for (let i=0;i<64;i++) {
                 fields[i].innerHTML = figures[0];
                 figures.shift();
@@ -332,8 +398,9 @@ export function Chess() {
 
     const viewHistory = () => {
         if (historyLevel===historyStorage.length-1) {
-            console.log(historyLevel);
-            console.log(JSON.stringify(historyStorage[historyLevel]));
+            // console.log(historyLevel);
+            console.log(currentPosition);
+            // console.log(JSON.stringify(historyStorage[historyLevel]));
         }
         console.log(JSON.stringify({historyStorage}));
     }
@@ -344,9 +411,9 @@ export function Chess() {
         },42);
     }
 
-    useEffect(()=>{
-        console.log(currentPosition);
-    },[currentPosition, historyLevel]);
+    // useEffect(()=>{
+    //     // console.log(currentPosition);
+    // },[]);
 
 // 7)render---------------------------------------------------------
   return (
@@ -354,7 +421,7 @@ export function Chess() {
         <div className='history-btns'>
             <button className='menu-btn'><HiMenuAlt1 /></button>
             <button onClick={()=>listHistory('back')}>◄◄</button>
-            <button onClick={()=>{viewHistory()}} className='view-btn' title='Look into the console'><TbHistory/> View History <TbHistory/></button>
+            <button onClick={()=>{viewHistory()}} className='view-btn' title='Only in console'><TbHistory/> View History <TbHistory/></button>
             <button onClick={()=>listHistory('forth')}>►►</button>
             <button className='option-btn'><FiSettings/></button>
         </div>
