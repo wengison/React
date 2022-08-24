@@ -1,4 +1,4 @@
-///. Simple Chess game - version: 1.0, last update: 23.8.2022 ///.
+///. Simple Chess game - version: 1.0, last update: 24.8.2022 ///.
 ///.----------------------------------------------------------///.
 import React, {useState} from 'react';
 import { Default } from './Default';
@@ -109,13 +109,24 @@ export function Chess() {
             const f = this.f;
             const possible = (...pars) => this.possibleMoves.push(...pars);
             let [start, forth, left, right, position] = [];
-            if(group===allWhite)[start, forth, left, right, position] = [f-16,f-8,f-7,f-9,f>47];
+            if(group===allWhite)[start, forth, left, right, position] = [f-16,f-8,f-9,f-7,f>47];
             if(group===allBlack)[start, forth, left, right, position] = [f+16,f+8,f+7,f+9,f<17];
             //situace:
-            const A = fields[forth].innerHTML===''&& fields[start].innerHTML=== ''&& position;     //start //f+-16
-            const B = fields[forth].innerHTML===''&& !group.includes(fields[forth].innerHTML);     //forth //f+-8
-            const C = fields[left].innerHTML!==''&& !group.includes(fields[left].innerHTML);       //left  //f+-7   
-            const D = fields[right].innerHTML!==''&& !group.includes(fields[right].innerHTML);     //right //f+-9
+            const rowA = [0,8,16,24,32,40,48,56];
+            const rowH = [7,15,23,31,39,47,55,63];
+            const A0 = rowA.includes(f)&&fields[f].innerHTML===pawnW;
+            const H0 = rowH.includes(f)&&fields[f].innerHTML===pawnB;
+            // console.log(fields[f].innerHTML===pawnB)
+            // console.log(A0)
+            const A = fields[forth].innerHTML===''&& fields[start]!==undefined&& fields[start].innerHTML=== ''&& position;     
+            //start //f+-16
+            const B = fields[forth].innerHTML===''&& !group.includes(fields[forth].innerHTML);     
+            //forth //f+-8
+            const C = fields[left]&&fields[left].innerHTML!=='' && fields[left]!==undefined&&!A0&& !group.includes(fields[left].innerHTML);      
+            //left  //f+-7   
+            const D = fields[right]&&fields[right].innerHTML!==''&& fields[right]!==undefined&&!H0&& !group.includes(fields[right].innerHTML);     //right //f+-9
+
+            // if(A0&&)
             //kombinace podminek:
             if(A&&B&&C&&D)possible(start,forth,left,right)
             if(A&&B&&C)possible(start,forth,left)
@@ -126,13 +137,12 @@ export function Chess() {
             if(A&&C)possible(start,left)
             if(A&&D)possible(start,right)
             if(B&&C)possible(forth,left)
-            if(B&&D)possible(forth,right)
+            if(B&&D){possible(forth,right);}//console.log(true);}
             if(C&&D)possible(left,right)
             if(A)possible(start)
             if(B)possible(forth)
             if(C)possible(left)
             if(D)possible(right)
-            //vykresleni:
             this.orangeOrange();
         }
 
@@ -168,38 +178,42 @@ export function Chess() {
                 [2,9,16],[47,54,61],[4,11,18,25,32],[31,38,45,52,59],[6,13,20,27,34,41,48],[15,22,29,36,43,50,57]
             ];
             const blackFields = [
-                [1,8],[3,10,17,24],[5,12,19,26,33,40],[7,14,21,28,35,42,49,56],[23,30,37,44,51,58],[39,46,53,60],[55,62],
-                [5,14,23],[3,12,21,30,39],[1,10,19,28,37,46,55],[8,17,26,35,44,33,62],[24,33,42,51,60],[40,49,58]
+                [1,8],[3,10,17,24],[5,12,19,26,33,40],[7,14,21,28,35,42,49,56],[23,30,37,44,51,58],[39,46,53,60],[55,62],[24,33,42,51,60],[40,49,58],
+                [5,14,23],[3,12,21,30,39],[1,10,19,28,37,46,55],[8,17,26,35,44,53,62],
+                // ??? proc nutno pridavat extra ?!
+                [40,49,58],[24,33,42,51,60],[8,17,26,35,44,53,62],[1,10,19,28,37,46,55],[3,12,21,30,39],[5,14,23]
             ];   
             // const A = [[0,9,18,27,36,45,54,63],[2,11,20,29,38,47],[16,25,34,43,52,61],[4,13,22,31],[32,41,50,59],[6,15],[48,57]];
             // const B =[[2,9,15],[47,54,61],[4,11,18,25,32],[31,38,45,52,59],[6,13,20,27,34,41,48],[15,22,29,36,43,50,57]];
             const possible= [];
-            let occupied = [];
+            // let occupied = [];
             const [shorterA, shorterB] = [[],[]]
             const [shorterAA,shorterAB, shorterBA, shorterBB] = [[],[],[],[]];
             whiteFields.forEach(arr=>(arr.includes(f))? possible.push(arr): false);
             blackFields.forEach(arr=>(arr.includes(f))? possible.push(arr): false);
-            possible.forEach(ar=>{
-                ar.forEach(num=>{
-                    if(fields[num].innerHTML&&fields[num].innerHTML!==fields[f].innerHTML)occupied.push(num)
-                })
-            });
+            // console.log(possible);
+            // possible.forEach(ar=>{
+            //     ar.forEach(num=>{
+            //         if(fields[num]&&fields[num]!==fields[f])occupied.push(num)
+            //     })
+            // });
             possible.forEach(ar=>{
                 ar.forEach(num=>{
                     if(num<f)shorterA.push(num);
                     if(num>f)shorterB.push(num);
                 })
             });
-            let [actualA, actualB,actualC, actualD] = [-1,-1,-1,-1];
+            // console.log(shorterB)
+            let [actualA, actualB,actualC, actualD] = [-10,-10,-10,-10];
             const short = (arr,s1,s2,a1,a2)=> {
                 arr.forEach(num=>{
                     if(num>a1) {
-                        s1.push(num)
                         a1=num;
+                        s1.push(num)
                     } else if(num>a2){
                         a1=100;
-                        s2.push(num)
                         a2=num;
+                        s2.push(num)
                     }
                 })
             }
@@ -221,13 +235,76 @@ export function Chess() {
 
 
         rookBehavior(group) {
-            // const fields = this.fields;
-            // const f = this.f;
-            //conditions for rook
-            //smer (doleva) a) -1 => push => const arrLeftRook = []  leftInner if element.innerHTML!=='' => indexOf(thisElement)
-            //smer (doprava) b) +1 => push => const arrRightRook = []
-            //smer (nahoru) c) +8 => push => const arrUpRook = []
-            //smer (dolu) d) -8 => push => const arrDown = []
+            const fields = this.fields;
+            const f = this.f;
+            let cur;
+            const [A,B,C,D,E,F,G,H] = [
+                [0,8,16,24,32,40,48,56],[1,9,17,25,33,41,49,57],[2,10,18,26,34,42,50,58],[3,11,19,27,35,43,51,59],
+                [4,12,20,28,36,44,52,60],[5,13,21,29,37,45,53,61],[6,14,22,30,38,46,54,62],[7,15,23,31,39,47,55,63]
+            ]
+            const [up,down,left,right] = [[],[],[],[]];
+            if(A.includes(f)){
+                right.push(f+1,f+2,f+3,f+4,f+5,f+6,f+7);
+                cur=A
+            }
+            if(B.includes(f)){
+                left.push(f-1);
+                right.push(f+1,f+2,f+3,f+4,f+5,f+6);
+                cur=B
+            }
+            if(C.includes(f)){
+                left.push(f-1,f-2);
+                right.push(f+1,f+2,f+3,f+4,f+5);
+                cur=C
+            }
+            if(D.includes(f)){
+                left.push(f-1,f-2,f-3);
+                right.push(f+1,f+2,f+3,f+4);
+                cur=D
+            }
+            if(E.includes(f)){
+                left.push(f-1,f-2,f-3,f-4);
+                right.push(f+1,f+2,f+3);
+                cur=E
+            }
+            if(F.includes(f)){
+                left.push(f-1,f-2,f-3,f-4,f-5);
+                right.push(f+1,f+2);
+                cur=F
+            }
+            if(G.includes(f)){
+                left.push(f-1,f-2,f-3,f-4,f-5,f-6);
+                right.push(f+1);
+                cur=G
+            }
+            if(H.includes(f)){
+                left.push(f-1,f-2,f-3,f-4,f-5,f-6,f-7);
+                cur=H
+            }
+            let possible = [];
+            cur.forEach(num=>{
+                if(num<f)up.unshift(num)
+                else if(num>f)down.push(num)
+            })
+            // left.reverse()
+            console.log(left,right)
+            left.find(el=>{
+                possible.push(el)
+                return fields[el].innerHTML!==''})
+            right.find(el=>{
+                possible.push(el)
+                return fields[el].innerHTML!==''})
+            // console.log(up, down)
+            up.find(el=>{
+                possible.push(el)
+                return fields[el].innerHTML!==''})
+            down.find(el=>{
+                possible.push(el)
+                return fields[el].innerHTML!==''})
+           
+            this.possibleMoves = possible.filter(e=>!group.includes(fields[e].innerHTML));
+            // this.possibleMoves = this.possibleMoves.filter(e=>!group.includes(fields[e].innerHTML));
+            this.orangeOrange()
         }
 
 
@@ -235,7 +312,7 @@ export function Chess() {
         static pawnForQueen(field, figure) {
             const fields = Array.from(document.querySelectorAll('.field'));
             if(figure===pawnW&&!fields[field]-8&&fields.indexOf(field)<8)field.innerHTML = queenW;
-            if(figure===pawnB&&fields.indexOf(field)>58)field.innerHTML = queenB;
+            if(figure===pawnB&&fields.indexOf(field)>55)field.innerHTML = queenB;
         }
 
         static movement(id) {
@@ -286,7 +363,7 @@ export function Chess() {
                     //klikam na policko, ktere se nachazi v predem definovanych pozizich => pokud vaci true=> "moveNow()" muze probehnout =>
                     //pokud vraci false => jde na dalsi podminku, kde je potreba zamezit definovanym figuram (zatim pawn, knight,bishop) volny pohyb..
                     if(possibleMoves.includes(fieldNumber))moveNow();
-                    if((currentFigure!==pawnB&&currentFigure!==pawnW&&currentFigure!==knightW&&currentFigure!==knightB)&&currentFigure!==bishopW&&currentFigure!==bishopB)moveNow();
+                    if((currentFigure!==pawnB&&currentFigure!==pawnW&&currentFigure!==knightW&&currentFigure!==knightB)&&currentFigure!==bishopW&&currentFigure!==bishopB&&currentFigure!==rookW&&currentFigure!==rookB)moveNow();
                 }
 
                 if (onMove==='black'&& allWhite.indexOf(clicked.innerHTML)===-1)move();
