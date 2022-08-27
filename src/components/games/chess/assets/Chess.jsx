@@ -8,15 +8,14 @@ import { HiMenuAlt1 } from 'react-icons/hi';
 
 
 export function Chess() {
+
 // 1)pieces---------------------------------------------------------
     const [pawnW,knightW,bishopW,rookW,queenW,kingW] = ['♙','♘','♗','♖','♕','♔'];
     const [pawnB,knightB,bishopB,rookB,queenB,kingB] = ['♟','♞','♝','♜','♛','♚'];
     const allWhite = ['♙','♘','♗','♖','♕','♔'];
     const allBlack = ['♟','♞','♝','♜','♛','♚'];
-
     let whiteIsChecked = false;
     let blackIsChecked = false;
-    // console.log(whiteIsChecked,blackIsChecked);
 
 // 2)states---------------------------------------------------------
     const [lastKing, setLastKing] = useState(0);
@@ -25,8 +24,8 @@ export function Chess() {
     const [currentFigure, setCurrentFigure] = useState('');
     const [currentPosition, setCurrentPosition] = useState([]);
     const [possibleMoves, setPossibleMoves] = useState([]);
-    const [whiteIsCheckedState, setWhiteIsChecked] = useState(false);
-    const [blackIsCheckedState, setBlackIsChecked] = useState(false);
+    const [whiteIsCheckedState, setWhiteIsCheckedState] = useState(false);
+    const [blackIsCheckedState, setBlackIsCheckedState] = useState(false);
     const [check, setCheck] = useState();
     const [kingMovedW, setKingMovedW] =useState(false);
     const [kingMovedB, setKingMovedB] =useState(false);
@@ -61,24 +60,12 @@ export function Chess() {
         constructor(time) {
             this.time = time;
             this.fields = Array.from(document.querySelectorAll('.field'));
-            // this.gameboard = this.setGameboard();
         }
-        // setPlayer() {
-        // }
-
-        // setTime() {
-        // }
 
          static setGameboard() {
-            // const element = document.getElementById("demo");
-            // element.remove();
+             const black = [1,3,5,7, 8,10,12,14,17,19,21,23,24,26,28,30, 33,35,37,39,40,42,44,46,49,51,53,55, 56,58,60,62];
+             const fields = Array.from(document.querySelectorAll('.field'));
             document.querySelector('.menu').style.background = 'none';
-            const fields = Array.from(document.querySelectorAll('.field'));
-            const black = [
-            1,3,5,7,     8,10,12,14, 
-            17,19,21,23, 24,26,28,30, 
-            33,35,37,39, 40,42,44,46, 
-            49,51,53,55, 56,58,60,62];
             black.map(b=>fields[b].style.background='lightblue');
             fields.forEach(f=>f.style.color = 'black');
             fields.forEach(f=>f.style.border = 'none');
@@ -196,8 +183,6 @@ export function Chess() {
             //left  //f+-7   
             const D = fields[right]&&fields[right].innerHTML!==''&& fields[right]!==undefined&&!H0&& !group.includes(fields[right].innerHTML);     
             //right //f+-9
-
-            // if(A0&&)
             //kombinace podminek:
             if (A && B && C && D)possible(start,forth,left,right)
             if (A && B && C)possible(start,forth,left)
@@ -227,7 +212,6 @@ export function Chess() {
             const rowH = [7,15,23,31,39,47,55,63];
             const A0 = rowA.includes(f)&&fields[f].innerHTML===pawnW;
             const H0 = rowH.includes(f)&&fields[f].innerHTML===pawnB;
-
             const C = fields[left]&& fields[left]!==undefined&&!A0&& !group.includes(fields[left].innerHTML);      
             //left  //f+-7   
             const D = fields[right]&& fields[right]!==undefined&&!H0&& !group.includes(fields[right].innerHTML); 
@@ -284,7 +268,6 @@ export function Chess() {
                     if(num>f)shorterB.push(num);
                 })
             });
-            // console.log(shorterB)
             let [actualA, actualB,actualC, actualD] = [-10,-10,-10,-10];
             const short = (arr,s1,s2,a1,a2)=> {
                 arr.forEach(num=>{
@@ -312,7 +295,6 @@ export function Chess() {
 //checking direction
             let direction = false;
             const kingIsHere = (a) => {
-                // const withoutKing = ['♟','♞','♝','♜','♛']
                 a.map(arr=>arr.forEach(num=>{
                     if(this.fields[num].innerHTML===kingB) {
                         // console.log(this.fields[num])
@@ -325,24 +307,25 @@ export function Chess() {
             }
             const withoutKing = ['♟','♞','♝','♜','♛','♙','♘','♗','♖','♕']
             kingIsHere(final);
-            if(direction) {
-                let fact = true;
-                direction.forEach(e=>{
-                    if(withoutKing.includes(this.fields[e].innerHTML)) {
-
-                        //nefunguje jelikoz figura muze byt i za kralem => v takovy situaci se sach nezobrazi !!
-                        fact = false;
-                    }
+            let color;
+            group===allWhite?color='black':color='white';
+            if(direction&&onMove==='black') {
+                this.fields.forEach(f=>f.classList.remove('check-direction-blackis'));
+                //group
+                direction.find(e=>{
+                    this.fields[e].classList.add('check-direction-blackis');
+                    // this.fields[e].style.border = 'solid orange 2px'
+                    return withoutKing.includes(this.fields[e].innerHTML);
                 })
-                if(fact) {
-                    direction.forEach(e=>this.fields[e].style.border = 'solid orange 2px')
-                }
-                
-                // direction.forEach(f=>this.fields[f].style.border = 'solid orange 2px');
-                console.log(kingIsHere(final))
+            } else if (direction&&onMove==='white') {
+                this.fields.forEach(f=>f.classList.remove('check-direction-whiteis'));
+                //group
+                direction.find(e=>{
+                    this.fields[e].classList.add('check-direction-whiteis');
+                    // this.fields[e].style.border = 'solid orange 2px'
+                    return withoutKing.includes(this.fields[e].innerHTML);
+                })
             }
-
-
             final.forEach(f=>barrier(f, this.possibleMoves));
             this.possibleMoves = this.possibleMoves.filter(e=>!group.includes(fields[e].innerHTML));
         }
@@ -418,6 +401,8 @@ export function Chess() {
                 return fields[el].innerHTML!==''})
            
             this.possibleMoves = possible.filter(e=>!group.includes(fields[e].innerHTML));
+
+            //rook behavior => checking direction
         }
 
         queenBehavior(color) {
@@ -510,17 +495,17 @@ export function Chess() {
         static kingIsChecked(fields) {
             fields.forEach(f=>{
                 if (f.innerHTML===kingB&&f.classList.contains('checkedFromWhite')) {
-                    // blackIsChecked = true;
-                    // setBlackIsChecked(true);
+                    blackIsChecked = true;
+                    setBlackIsCheckedState(true);
                 } else if(f.innerHTML===kingW&&f.classList.contains('checkedFromBlack')) {
-                    // whiteIsChecked = true;
-                    // setWhiteIsChecked(true);
+                    whiteIsChecked = true;
+                    setWhiteIsCheckedState(true);
                 }
             })
             if(blackIsChecked){
-                fields.forEach(f=>f.innerHTML===kingB?f.style.color = 'orange':false)
+                fields.forEach(f=>f.innerHTML===kingB&&onMove==='black'?f.style.color = 'orange':false)
             } else if(whiteIsChecked){
-                fields.forEach(f=>f.innerHTML===kingW?f.style.color = 'orange':false)
+                fields.forEach(f=>f.innerHTML===kingW&&onMove==='white'?f.style.color = 'orange':false)
             }
         }
 
@@ -554,9 +539,11 @@ export function Chess() {
                 if (onMove==='white'&& allWhite.indexOf(clicked.innerHTML)!==-1) {
                     pickFigure();
                     setOnMove('black');
+                    setBlackIsCheckedState(false);
                 } else if (onMove==='black'&& allBlack.indexOf(clicked.innerHTML)!==-1) {
                     pickFigure();
                     setOnMove('white');
+                    setWhiteIsCheckedState(false);
                 }
             } 
         //2-nechci tuto figuru (vraceni)
@@ -583,24 +570,35 @@ export function Chess() {
                         (fields[(indexes.indexOf(currentField))]).style.color = 'black';
                         fields.forEach(f=>f.style.border = 'none');
                     }
+
                     if(possibleMoves.includes(fieldNumber)){
                         if(blackIsCheckedState) {
-                            const filtered = possibleMoves.filter(m=>fields[m].classList.contains('checkedFromWhite'));
-                            let real;
-
-// !! potreba spojit policka mezi kingem a prvni checkujici figurou
-//pridat unik krale
-                            if(filtered.includes(fieldNumber)) {
+                            const filtered = possibleMoves.filter(m=>fields[m].classList.contains('check-direction-blackis'));
+                            const kingPos = fields.find(f=>f.innerHTML===kingB);
+                            const king = new Piece(kingPos,kingB);
+                            king.behavior();
+                            if(filtered.includes(fieldNumber)||king.possibleMoves.includes(fieldNumber)) {
+                                fields.forEach(f=>{
+                                    if(filtered.includes(fields.indexOf(f))||king.possibleMoves.includes(fields.indexOf(f))) {
+                                        console.log('jsou dostupna pole');
+                                    }
+                                })
                                 moveNow();
                                 Piece.kingMoved(currentFigure, fields);
-                                // setBlackIsChecked(false);
                             }
                         } else if(whiteIsCheckedState) {
-                            const filtered = possibleMoves.filter(m=>fields[m].classList.contains('checkedFromBlack'));
-                            if(filtered.includes(fieldNumber)) {
+                            const filtered = possibleMoves.filter(m=>fields[m].classList.contains('check-direction-whiteis'));
+                            const kingPos = fields.find(f=>f.innerHTML===kingW);
+                            const king = new Piece(kingPos,kingW);
+                            king.behavior();
+                            if(filtered.includes(fieldNumber)||king.possibleMoves.includes(fieldNumber)) {
+                                fields.forEach(f=>{
+                                    if(filtered.includes(fields.indexOf(f))||king.possibleMoves.includes(fields.indexOf(f))) {
+                                        console.log('jsou dostupna pole');
+                                    }
+                                })
                                 moveNow();
                                 Piece.kingMoved(currentFigure, fields);
-                                // setWhiteIsChecked(false);
                             }
                         } 
                         else if (!blackIsCheckedState&&!whiteIsCheckedState) {
