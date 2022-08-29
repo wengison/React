@@ -1,4 +1,4 @@
-///. Simple Chess game - version: 1.0, last update: 24.8.2022 ///.
+///. Simple Chess game - version: 1.0, last update: 27.8.2022 ///.
 ///.----------------------------------------------------------///.
 import React, {useState, useEffect} from 'react';
 import { Default } from './Default';
@@ -29,8 +29,8 @@ export function Chess() {
     const [check, setCheck] = useState();
     const [kingMovedW, setKingMovedW] =useState(false);
     const [kingMovedB, setKingMovedB] =useState(false);
-    const [checkKingW, setChecKingkW] = useState(false);
-    const [checkKingB, setCheckKingB] = useState(false);
+    // const [checkKingW, setChecKingkW] = useState(false);
+    // const [checkKingB, setCheckKingB] = useState(false);
     const [historyStorage, setHistoryStorage] = useState(Default);
     const [historyLevel, setHistoryLevel] = useState(0);
 
@@ -63,8 +63,8 @@ export function Chess() {
         }
 
          static setGameboard() {
-             const black = [1,3,5,7, 8,10,12,14,17,19,21,23,24,26,28,30, 33,35,37,39,40,42,44,46,49,51,53,55, 56,58,60,62];
-             const fields = Array.from(document.querySelectorAll('.field'));
+            const black = [1,3,5,7,8,10,12,14,17,19,21,23,24,26,28,30,33,35,37,39,40,42,44,46,49,51,53,55,56,58,60,62];
+            const fields = Array.from(document.querySelectorAll('.field'));
             document.querySelector('.menu').style.background = 'none';
             black.map(b=>fields[b].style.background='lightblue');
             fields.forEach(f=>f.style.color = 'black');
@@ -89,17 +89,6 @@ export function Chess() {
             document.querySelector('.play-btn').title = '';
         }
     }
-
-    let myPromise = new Promise(function(res,rej){
-        let x = Array.from(document.querySelectorAll('.field'));
-        if(x!==undefined) {
-            res(Array.from(document.querySelectorAll('.field')))
-        } else {
-            rej('err')
-        }
-    })
-
-    
 
 // 5)main game logic---------------------------------------------------------
     class Piece {
@@ -173,8 +162,6 @@ export function Chess() {
             const rowH = [7,15,23,31,39,47,55,63];
             const A0 = rowA.includes(f)&&fields[f].innerHTML===pawnW;
             const H0 = rowH.includes(f)&&fields[f].innerHTML===pawnB;
-            // console.log(fields[f].innerHTML===pawnB)
-            // console.log(A0)
             const A = fields[forth].innerHTML===''&& fields[start]!==undefined&& fields[start].innerHTML=== ''&& position;     
             //start //f+-16
             const B = fields[forth].innerHTML===''&& !group.includes(fields[forth].innerHTML);     
@@ -254,7 +241,7 @@ export function Chess() {
             const blackFields = [
                 [1,8],[3,10,17,24],[5,12,19,26,33,40],[7,14,21,28,35,42,49,56],[23,30,37,44,51,58],[39,46,53,60],[55,62],[24,33,42,51,60],
                 [40,49,58],[5,14,23],[3,12,21,30,39],[1,10,19,28,37,46,55],[8,17,26,35,44,53,62],
-                // ??? proc nutno pridavat extra ?!
+                // ??? proc  extra arrs?!
                 [40,49,58],[24,33,42,51,60],[8,17,26,35,44,53,62],[1,10,19,28,37,46,55],[3,12,21,30,39],[5,14,23]
             ];   
             const possible= [];
@@ -297,7 +284,6 @@ export function Chess() {
             const kingIsHere = (a) => {
                 a.map(arr=>arr.forEach(num=>{
                     if(this.fields[num].innerHTML===kingB) {
-                        // console.log(this.fields[num])
                         direction = arr;
                     } else if(this.fields[num].innerHTML===kingW) {
                         direction = arr;
@@ -306,9 +292,10 @@ export function Chess() {
                 return direction;
             }
             const withoutKing = ['♟','♞','♝','♜','♛','♙','♘','♗','♖','♕']
+            //const withoutKing = allBlack.concat(allWhite);
             kingIsHere(final);
-            let color;
-            group===allWhite?color='black':color='white';
+            // let color;
+            // group===allWhite?color='black':color='white';
             if(direction&&onMove==='black') {
                 this.fields.forEach(f=>f.classList.remove('check-direction-blackis'));
                 //group
@@ -400,9 +387,36 @@ export function Chess() {
                 possible.push(el)
                 return fields[el].innerHTML!==''})
            
-            this.possibleMoves = possible.filter(e=>!group.includes(fields[e].innerHTML));
+                
+//rook behavior => checking direction
+                let direction = false;
+                
+                const withoutKing = ['♟','♞','♝','♜','♛','♙','♘','♗','♖','♕']
+                //const withoutKing = allBlack.concat(allWhite);
+                // kingIsHere(final);
+               
+                // if(direction&&onMove==='black') {
+                //     this.fields.forEach(f=>f.classList.remove('check-direction-blackis'));
+                //     //group
+                //     direction.find(e=>{
+                //         this.fields[e].classList.add('check-direction-blackis');
+                //         // this.fields[e].style.border = 'solid orange 2px'
+                //         return withoutKing.includes(this.fields[e].innerHTML);
+                //     })
+                // } else if (direction&&onMove==='white') {
+                //     this.fields.forEach(f=>f.classList.remove('check-direction-whiteis'));
+                //     //group
+                //     direction.find(e=>{
+                //         this.fields[e].classList.add('check-direction-whiteis');
+                //         // this.fields[e].style.border = 'solid orange 2px'
+                //         return withoutKing.includes(this.fields[e].innerHTML);
+                //     })
+                // }
+                // final.forEach(f=>barrier(f, this.possibleMoves));
+                // this.possibleMoves = this.possibleMoves.filter(e=>!group.includes(fields[e].innerHTML));
+                
+                this.possibleMoves = possible.filter(e=>!group.includes(fields[e].innerHTML));
 
-            //rook behavior => checking direction
         }
 
         queenBehavior(color) {
@@ -418,6 +432,7 @@ export function Chess() {
             const f = this.f;
             setLastKing(f);
             const kingBasic = [f-9,f-8,f-7,f-1,f+1,f+7,f+8,f+9];
+            const [Aline, Hline] = [[0,8,16,24,32,40,48,56],[7,15,23,31,39,47,55,63]]
             const A = (f===4&&fields[7].innerHTML===rookB&&kingMovedB===false)  //kingBasic.push(f+2)
             const B = (f===4&&fields[0].innerHTML===rookB&&kingMovedB===false)//kingBasic.push(f-2)
             const C = (f===60&&fields[63].innerHTML===rookW&&kingMovedW===false)//kingBasic.push(f+2)
@@ -441,18 +456,25 @@ export function Chess() {
                 const kingPlusPlus = kingPlus.filter(f=>!fields[f].classList.contains('checkedFromWhite'));
                 this.possibleMoves = kingPlusPlus;
             }
+
+            if(Aline.includes(f)) {
+                this.possibleMoves = this.possibleMoves.filter(num=>num!==f-1&&num!==f-9&&num!==f+7);
+            } else if(Hline.includes(f)) {
+                this.possibleMoves = this.possibleMoves.filter(num=>num!==f+1&&num!==f-7&&num!==f+9);
+            }
             
             // + tahy rosada:
-            if(check===false&&fields[f].innerHTML===kingW&&fields[f+1].innerHTML===''&&fields[f+2].innerHTML===''&&fields[63].innerHTML===rookW) {
+            if(check===false&&fields[f].innerHTML===kingW&&fields[f+1].innerHTML===''&&fields[f+2].innerHTML===''&&fields[63].innerHTML===rookW&&fields[62].innerHTML===''&&fields[61]==='') {
+                console.log(fields[62].innerHTML)
                 this.possibleMoves.push(f+2);
             }
-            if(check===false&&fields[f].innerHTML===kingW&&fields[f-1].innerHTML===''&&fields[f-2].innerHTML===''&&fields[f-3].innerHTML===''&&fields[56].innerHTML===rookW) {
+            if(check===false&&fields[f].innerHTML===kingW&&fields[f-1].innerHTML===''&&fields[f-2].innerHTML===''&&fields[f-3].innerHTML===''&&fields[56].innerHTML===rookW&&fields[57].innerHTML===''&&fields[58]==='') {
                 this.possibleMoves.push(f-2);
             }
-            if(check===false&&fields[f].innerHTML===kingB&&fields[f+1].innerHTML===''&&fields[f+2].innerHTML===''&&fields[7].innerHTML===rookB) {
+            if(check===false&&fields[f].innerHTML===kingB&&fields[f+1].innerHTML===''&&fields[f+2].innerHTML===''&&fields[7].innerHTML===rookB&&fields[6].innerHTML===''&&fields[5]==='') {
                 this.possibleMoves.push(f+2);
             }
-            if(check===false&&fields[f].innerHTML===kingB&&fields[f-1].innerHTML===''&&fields[f-2].innerHTML===''&&fields[f-3].innerHTML===''&&fields[0].innerHTML===rookB) {
+            if(check===false&&fields[f].innerHTML===kingB&&fields[f-1].innerHTML===''&&fields[f-2].innerHTML===''&&fields[f-3].innerHTML===''&&fields[0].innerHTML===rookB&&fields[1].innerHTML===''&&fields[2]==='') {
                 this.possibleMoves.push(f-2);
             }
         }
