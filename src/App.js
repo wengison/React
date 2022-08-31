@@ -21,10 +21,10 @@ function App() {
         <Route path='/friends' element={<Friends/>}/>
         <Route path='/about' element={<About/>}/>
         {/* second level routes */}
-        <Route path='/games/quiz' exact element={<GamesQ/>}/>
-        <Route path='/games/chess' exact element={<GamesCh/>}/>
-        <Route path='/games/snake' exact element={<GamesS/>}/>
-        <Route path='/games/tetris' exact element={<GamesT/>}/>
+        <Route path='/games/quiz' element={<GamesQ/>}/>
+        <Route path='/games/chess' element={<GamesCh/>}/>
+        <Route path='/games/snake' element={<GamesS/>}/>
+        <Route path='/games/tetris' element={<GamesT/>}/>
       </Routes>
     </Router>
   );
