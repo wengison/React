@@ -5,6 +5,8 @@ import Startgame from './Startgame';
 import Quiz from './Quiz';
 import Endgame from './Endgame';
 
+import './style/index.css';
+
 function GamesQ() {
     const [gameState, setGameState] = useState('start');
     const [score, setScore] =useState(0);

@@ -1,0 +1,79 @@
+/* 2)quiz game --------- */
+
+.quizgame-div {
+    width: 60%;
+    min-width: 900px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+ }
+ 
+ .quizbox-question {
+     width: 97.5%;
+     height: 16vh;
+     min-height: 100px;
+     /* background: rgb(146, 144, 144); */
+     background: linear-gradient(to right, #E100FF, #7F00FF); 
+     border: solid rgb(245, 243, 243) 2px;
+     color: white;
+     border-radius: 10px;
+     margin-bottom: 1vh;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+     padding: 15px;  
+ }
+ 
+ .quizbox {
+     width: 100%;
+     height: 93vh;
+     min-height: 500px;
+     position: fixed;
+     margin-top: 7vh;
+     color: white;
+     border: solid whitesmoke 3px;
+     background: linear-gradient(to right, #c9d6ff, #e2e2e2); 
+     display: flex;
+     justify-content: center;
+ }
+ 
+ .quizbox-grid {
+     width: 100%;
+     height: 50%;
+     display: grid;
+     justify-content: space-around;
+     grid-template-columns: repeat(2, 1fr);
+     align-items: center;
+     justify-items: center;
+ }
+ 
+ .quizbox-grid li{
+     width: 95%;
+     height: 90%;
+     padding: 0vh;
+     background: whitesmoke;
+     color: black;
+     border-radius: 10px;
+     cursor: pointer;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     border: solid white 2px;
+ }
+ 
+ .quizbox-grid li:hover {
+     background: linear-gradient(to right, #c9d6ff, #e2e2e2);
+ }
+
+ @media (max-width: 420px) {
+
+    .quizbox-question {
+        width: 40%;
+        font-size: .85em;
+    }
+    .quizbox-grid {
+        width: 40%;
+    }
+ }

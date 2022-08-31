@@ -30,7 +30,7 @@ const Quizgame = (props) => {
     };
 
     const checkAnswer = (answer, picked) => {
-        if(answer==picked) {
+        if(answer===picked) {
             setScore(score+1);
             console.log('Your score: '+(score+1));
         } else {
@@ -43,7 +43,7 @@ const Quizgame = (props) => {
     },[current]);
 
   return (
-    <section className='quizgame-div'>
+    <section className='quizgame-div f-body'>
         <div className='quizbox-question'><h2>{question}</h2></div>
         <div className='quizbox-grid'>{myFor()}</div>
     </section>

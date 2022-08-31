@@ -1,21 +1,16 @@
 import React, {useState} from 'react';
 import ContextGameState from './context/Context';
 import Header from '../../Header';
-
-import Startgame from './Startgame';
 import Snake from './Snake';
-import Endgame from './Endgame';
+
 
 function GamesS() {
-    const [gameState, setGameState] = useState('start');
     const [score, setScore] =useState(0);
 
   return (
-    <ContextGameState.Provider value={{gameState,setGameState, score, setScore}}>
+    <ContextGameState.Provider value={{score, setScore}}>
         <Header className='header'/>
-        {gameState === 'start' && <Startgame className='startgame'/>}
-        {gameState === 'snake' && <Snake className='snake'/>}
-        {gameState === 'end' && <Endgame className='endgame'/>}
+        <Snake className='snake'/>
     </ContextGameState.Provider>
   )
 }

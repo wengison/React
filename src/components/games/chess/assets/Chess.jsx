@@ -749,7 +749,7 @@ export function Chess() {
 
 // 7)render---------------------------------------------------------
   return (
-    <section className='chess-body'>
+    <section className='chess-body f-body'>
         <div className='history-btns'>
             <button className='menu-btn'><HiMenuAlt1 /></button>
             <button onClick={()=>listHistory('back')}>◄◄</button>

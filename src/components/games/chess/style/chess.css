@@ -59,8 +59,35 @@
     justify-items: center;
     align-items: center;
     top: 10vh;
-    outline: solid rgb(100, 100, 100) 1px;;
+    outline: solid rgb(100, 100, 100) 1px;
+    background: whitesmoke;
 }
+
+/* #demo {
+    width:400px;
+    height: 200px;
+    position: absolute;
+    top: 52%;
+    bottom: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+#demo h1 {
+    border: solid black 3px;
+    
+    border-radius: 15px;
+    padding: 5px 20px;
+}
+
+#demo h1:hover {
+    cursor: pointer;
+    color: lightskyblue;
+    border: solid lightskyblue 3px;
+} */
 
 .field {
     width: 100%;
