@@ -5,7 +5,7 @@ function About() {
   return (
     <>
     <Header className='header'/>
-    <div>About</div>
+    <div className='f-body'>About</div>
     </>
   )
 }

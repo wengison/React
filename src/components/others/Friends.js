@@ -5,7 +5,7 @@ function Friends() {
   return (
     <>
       <Header className='header'/>
-      <div>Friends</div>
+      <div className='f-body'>Friends</div>
     </>
   )
 }
