@@ -32,7 +32,7 @@ const Header = ({value}) => {
     
 
   useEffect(()=>{
-    console.log('clean');
+    // console.log('clean');
   },[])
 
   return (

@@ -1,31 +1,69 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './Weather.css';
 import Card from 'react-bootstrap/Card';
 
 function Weather() {
 
-    let lat = 33.44;
-    let lon = -94.04;
+    const [weather, setWeather] = useState('');
+    const [city, setCity] = useState('');
     const apiKey = 'b41bbbf4923a2d8d44fb03e8a0075bf9';
-    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=hourly,daily&appid=${apiKey}`;
-
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${apiKey}`;
+    
+    const cardWeather = document.querySelector('.card-weather');
+    const cardCity = document.querySelector('.card-city-h1');
+    let img = 'cloudy.jpg'
     let result = '';
     const myCall = ()=> {
-        fetch(url)
-            .then(res=>result = res.json())
-            .then(console.log(result))
+        if(city!=='') {
+            fetch(url)
+            .then(response=>response.json())
+            .then(data=>{
+                result = Math.round(data.main.temp)
+                setWeather(result+'°C')
+                cardCity.innerHTML = city.toUpperCase();
+                cardWeather.style.display = 'block';
+                // cardWeather.style.background = `url(cloudy.jpg)`;
+                setCity('');
+            })
+        }
+    }
+
+    const Enter = (event) => {
+        if(event.key==='Enter') {
+            myCall()
+        }
     }
 
 
+    setTimeout(()=>{
+        document.querySelector('.weather-welcome').classList.add('display-none')
+    },2000)
+
+    // let temperature = myCall();
+    // console.log(temperature);
+
+    
+
   return (
+    <section className='weather-body'>
     <div className='weather-div'>
         <div className='weather-data-box'>
-            <Card className='mb-3'>
-                
+        <h3 className='weather-welcome'>Welcome in React Weather !!</h3>
+            <input 
+                className='input-city' 
+                name='city' type="text" 
+                value={city}
+                onChange={(e)=>setCity(e.target.value)}
+                onKeyPress={Enter}
+                placeholder='🔍Enter city...'/>
+            <button className='weather-get' onClick={()=>myCall()}>Get</button>
+            <Card className='card-weather'>
+                <h1 className='card-city-h1'></h1>
+                <div className=' card-temp'>{weather} </div>
             </Card>
-            <button onClick={()=>myCall()}>Get</button>
         </div>
     </div>
+    </section>
   )
 }
 

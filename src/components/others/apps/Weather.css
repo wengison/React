@@ -1,6 +1,105 @@
+.weather-body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url(weather-background.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+/* --- */
+.weather-welcome {
+    margin-top: 1vh;
+    font-weight: bold;
+    background: rgba(238, 238, 238, 0.9);
+    position: absolute;
+    top: -1vh;
+    padding: 2vh;
+    border-radius: 5px;
+    color: rgb(88, 88, 88);
+    border: solid 1px rgb(221, 221, 221);
+    transition: 1s ease-out;
+    opacity: 1;
+}
+
+.display-none {
+    opacity: 0;
+}
+
 .weather-div {
     position: absolute;
     margin-top: 10vh;
     width: 100%;
     height: 90vh;
+    /* padding: 5vh;    */
+    display: flex;
+    justify-content: center;
 }
+.weather-data-box {
+    width: 100%;
+    max-width: 500px;
+    padding: 1vh;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+    flex-direction: column;
+    background: rgba(0,0,0,.15);
+    padding-inline: 3vh;
+}
+
+.weather-get {
+    width: 100px;
+    border: solid white 1px;
+    border-radius: 7px;
+    background: white;
+    color: rgb(114, 114, 114);
+    /* font-weight: bold; */
+}
+.weather-get:hover {
+    border: solid rgb(177, 177, 177) 1px;
+}
+
+/* -------- */
+.input-city {
+    margin-top: 10vh;
+    border: solid whitesmoke 2px;
+    border-radius: 5px;
+    padding: 5px;
+}
+/* cards */
+
+.card-weather {
+    margin-top: 5vh;
+    padding: 12vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+    color: rgb(48, 48, 48);
+}
+
+.card-city {
+    width: 90%;
+    height: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-city-h1 {
+    text-align: center;
+    font-size:1.5em;
+}
+
+.card-temp {
+    text-align: center;
+    font-size: 3.75em;
+    font-weight: bold;
+    /* border: solid black 1px; */
+}
+
+
+
+
+
