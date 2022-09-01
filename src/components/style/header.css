@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     justify-content:center;
-    border-inline: solid white 1px;
+    /* border-inline: solid white 1px; */
     text-decoration: none;
 }
 

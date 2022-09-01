@@ -26,7 +26,7 @@ export function Chess() {
     const [possibleMoves, setPossibleMoves] = useState([]);
     const [whiteIsCheckedState, setWhiteIsCheckedState] = useState(false);
     const [blackIsCheckedState, setBlackIsCheckedState] = useState(false);
-    const [check, setCheck] = useState();
+    const [check, setCheck] = useState('');
     const [kingMovedW, setKingMovedW] =useState(false);
     const [kingMovedB, setKingMovedB] =useState(false);
     // const [checkKingW, setChecKingkW] = useState(false);
@@ -389,9 +389,9 @@ export function Chess() {
            
                 
 //rook behavior => checking direction
-                let direction = false;
+                // let direction = false;
                 
-                const withoutKing = ['♟','♞','♝','♜','♛','♙','♘','♗','♖','♕']
+                // const withoutKing = ['♟','♞','♝','♜','♛','♙','♘','♗','♖','♕']
                 //const withoutKing = allBlack.concat(allWhite);
                 // kingIsHere(final);
                
@@ -742,6 +742,7 @@ export function Chess() {
     }
 
     useEffect(()=>{
+        setCheck('')
         // console.log(blackIsCheckedState);
 
     },[whiteIsCheckedState,blackIsCheckedState])

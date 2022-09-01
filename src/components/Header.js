@@ -1,37 +1,35 @@
-import React, {useState, useEffect}   from 'react';
+import React, {useEffect}   from 'react';
 import { NavLink } from 'react-router-dom';
 import {FaUserCircle, FaReacteurope} from 'react-icons/fa';
 
 import './style/header.css';
 import './style/media-header.css';
 
-const Header = () => {
+const Header = ({value}) => {
 
-  let clicked = false;
+  // let clicked = false;
 
-  const hamburger = ()=> {
-    const body = document.querySelector('.just-center');
-    const ham = document.querySelector('#nav-icon3');
+  
+    const hamburger = ()=> {
+      const ham = document.querySelector('#nav-icon3');
+      const mobnav = document.querySelector('.wtf-mobile');
+      // const body = document.querySelector('.just-center');
+  
+      ham.addEventListener('click',()=>{
+        if(!value) {
+          mobnav.classList.add('active');
+          ham.classList.add('open');
+          value = true;
+        } else {
+          mobnav.classList.remove('active');
+          ham.classList.remove('open');
+          value = false;
+        }
+      });
+    }
+    setTimeout(hamburger,10);
 
-    ham.addEventListener('click',()=>{
-      if(!clicked) {
-        clicked = true;
-        ham.classList.add('open');
-        const darker = document.createElement('div');
-        const fbody = document.querySelector('.f-body');
-        fbody.appendChild(darker);
-        darker.className = 'darker'
-      } else {
-        clicked = false;
-        ham.classList.remove('open');
-        const el = document.querySelector('.darker');
-        el.remove();
-      }
-    });
-
-  }
     
-  setTimeout(hamburger,100);
 
   useEffect(()=>{
     console.log('clean');
@@ -47,8 +45,8 @@ const Header = () => {
           <NavLink to='/games' className='navlink'>
             <p>New game</p>
           </NavLink>
-          <NavLink to='/friends' className='navlink'>
-            <p className='header-links-p-border'>Friends</p>
+          <NavLink to='/apps' className='navlink'>
+            <p className='header-links-p-border'>Apps</p>
           </NavLink>
           <NavLink to='/about' className='navlink'>
             <p>About</p>

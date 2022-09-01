@@ -8,7 +8,8 @@
    .header-logo {
     width: 100px;
     height: 10vh;
-    border: none;
+    /* border: none; */
+    /* outline: solid 5px red; */
    }
    .user-icon {
     display: none;
@@ -30,7 +31,7 @@
    }
   }
 
-@media only screen and (max-width: 380px) {
+@media only screen and (max-width: 420px) {
    .user-icon {
       /* display: block; */
       display: none;
@@ -71,12 +72,12 @@
     #nav-icon3 span{
       display: block;
       position: absolute;
-      height: 9px;
-      width: 100%;
+      height: 8px;
+      width: 80%;
       background: #fff;
       border-radius: 9px;
       opacity: 1;
-      left: 0;
+      left: 10px;
       -webkit-transform: rotate(0deg);
       -moz-transform: rotate(0deg);
       -o-transform: rotate(0deg);
@@ -126,12 +127,12 @@
  }
 
  /* --darker */
- .darker {
+ /* .darker {
    position: fixed;
    width: 100%;
    height: 90vh;
    top: 10vh;
    background: rgba(0,0,0,.5);
    z-index: 100000;
- }
+ } */
 }
