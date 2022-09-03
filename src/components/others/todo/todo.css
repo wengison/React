@@ -1,0 +1,77 @@
+.todo-body {
+    width: 100%;
+    /* height: 93vh; */
+    height: auto;
+    background: linear-gradient(19deg, #21D4FD,#B721FF);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    margin-top: 7vh;
+    gap: 2vh;
+}
+.todo-input {
+    width: 300px;
+    margin-top: 5vh;
+    padding: 5px;
+    border:solid blue 1px;
+    border-radius: 5px;
+    
+}
+
+.todo-div {
+    width: 300px;
+    background: linear-gradient(to right, #396afc, #2948ff);
+    color: white;
+    padding: 4px;
+    padding-left: 8px;
+    position: relative;
+    margin-top: 10px;
+    transition: .4s ease-out;
+    padding-right: 65px;
+    overflow: hidden;
+    outline: 1px solid white;
+    border-radius: 5px;
+}
+
+.todo-btn {
+    width: 33px;
+    height: 33px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    color: white;
+}
+
+.todo-set {
+    margin-right: 32px;
+}
+
+.todo-btn:nth-child(1):hover, .todo-btn:nth-child(2):hover{ 
+    color: black;
+    cursor: pointer;
+} 
+
+
+ /* .todo-set:first-child {
+    margin-right: 30px;
+    cursor: pointer;
+} */
+
+
+.todo-display-none {
+    transform: translateX(-400px);
+    opacity: 0;
+}
+
+@media (max-width: 420px) {
+    .todo-body {
+        margin-top: 10vh;
+        height: 90vh;
+    }
+}

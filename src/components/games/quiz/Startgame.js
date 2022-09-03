@@ -14,7 +14,7 @@ const Startgame = () => {
     <>
       <div className='just-center f-body'>
         <div className='startgame-div'>
-            <img src={require('./style/react-logo.png')} alt={'obr'}></img>
+            <img className='startgame-quiz-img' src={require('./style/react-logo.png')} alt={'obr'} style={{width: '50%'}}></img>
             <h1>Welcome in React Quiz !!</h1>
             <button onClick={()=>setGameState('quiz')} className='newgame-btn'>New Quiz</button>
         </div>

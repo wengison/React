@@ -14,6 +14,7 @@ import GamesS from './components/games/snake';
 import GamesT from './components/games/tetris';
 
 import Weather from './components/others/apps/Weather';
+import Todo from './components/others/todo/Todo';
 
 function App() {
 
@@ -27,9 +28,10 @@ function App() {
       <Routes>
         {/* first level routes */}
         <Route path='/' exact element={<Home/>}/>
-        <Route path='/games' exact element={<Games/>}/>
-        <Route path='/apps' element={<Apps/>}/>
-        <Route path='/about' element={<About/>}/>
+        <Route path='/games' exact element={<About/>}/>
+        <Route path='/apps' element={<About/>}/>
+        <Route path='/about' element={<Apps/>}/>
+        <Route path='/playground' exact element={<Games/>}/>
         {/* second level routes */}
         <Route path='/games/quiz' element={<GamesQ/>}/>
         <Route path='/games/chess' element={<GamesCh/>}/>
@@ -37,6 +39,8 @@ function App() {
         <Route path='/games/tetris' element={<GamesT/>}/>
 
         <Route path='/apps/weather' element={<Weather/>}/>
+        {/* mini shi*s */}
+        <Route path='/apps/todo' element={<Todo/>}/>
       </Routes>
     </Router>
   );

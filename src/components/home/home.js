@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './home.css';
 // import '../style/header.css';
 // import '../style/media-header.css';
 

@@ -17,23 +17,56 @@ function Apps() {
           <Card className="text-center">
           <Card.Header>#1</Card.Header>
           <Card.Body>
+            <Card.Title>React Games</Card.Title>
+            
+            <NavLink to='/playground'>
+              <Button variant="primary">Try this</Button>
+            </NavLink>
+          </Card.Body>
+        </Card>
+        {/*  */}
+        <Card className="text-center">
+          <Card.Header>#2</Card.Header>
+          <Card.Body>
             <Card.Title>React Weather</Card.Title>
             
             <NavLink to='/apps/weather'>
               <Button variant="primary">Try this</Button>
             </NavLink>
           </Card.Body>
-          
         </Card>
-        {/*  */}
+
         <Card className="text-center">
-          <Card.Header>#2</Card.Header>
+          <Card.Header>#3</Card.Header>
           <Card.Body>
-            <Card.Title>React Calculator</Card.Title>
+            <Card.Title>React Todo</Card.Title>
             
-            <Button variant="primary">Try this</Button>
+            <NavLink to='/apps/todo'>
+              <Button variant="primary">Try this</Button>
+            </NavLink>
           </Card.Body>
-         
+        </Card>
+
+        <Card className="text-center">
+          <Card.Header>#4</Card.Header>
+          <Card.Body>
+            <Card.Title>React 4</Card.Title>
+            
+            <NavLink to='/apps/todo'>
+              <Button variant="primary">Try this</Button>
+            </NavLink>
+          </Card.Body>
+        </Card>
+
+        <Card className="text-center">
+          <Card.Header>#5</Card.Header>
+          <Card.Body>
+            <Card.Title>React 5</Card.Title>
+            
+            <NavLink to='/apps/todo'>
+              <Button variant="primary">Try this</Button>
+            </NavLink>
+          </Card.Body>
         </Card>
       </div>
     </>

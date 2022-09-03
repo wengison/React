@@ -742,6 +742,7 @@ export function Chess() {
     }
 
     useEffect(()=>{
+        Game.setGameboard()
         setCheck('')
         // console.log(blackIsCheckedState);
 
@@ -765,7 +766,7 @@ export function Chess() {
             </section> */}
             {setFields()}
         </div>
-        <button onClick={()=>{Game.setGameboard();const game = new Game(420);game.setFigures()}} className='play-btn' title='Click to start'>Play</button>
+        <button onClick={()=>{const game = new Game(420);game.setFigures()}} className='play-btn' title='Click to start'>Play</button>
     </section>
   )
 }

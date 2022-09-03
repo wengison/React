@@ -8,10 +8,9 @@ function Weather() {
     const [city, setCity] = useState('');
     const apiKey = 'b41bbbf4923a2d8d44fb03e8a0075bf9';
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${apiKey}`;
-    
     const cardWeather = document.querySelector('.card-weather');
     const cardCity = document.querySelector('.card-city-h1');
-    let img = 'cloudy.jpg'
+    // let img = 'cloudy.jpg'
     let result = '';
     const myCall = ()=> {
         if(city!=='') {
@@ -22,7 +21,6 @@ function Weather() {
                 setWeather(result+'°C')
                 cardCity.innerHTML = city.toUpperCase();
                 cardWeather.style.display = 'block';
-                // cardWeather.style.background = `url(cloudy.jpg)`;
                 setCity('');
             })
         }
@@ -34,15 +32,11 @@ function Weather() {
         }
     }
 
-
     setTimeout(()=>{
         document.querySelector('.weather-welcome').classList.add('display-none')
-    },2000)
+    },7000)
 
-    // let temperature = myCall();
-    // console.log(temperature);
 
-    
 
   return (
     <section className='weather-body'>

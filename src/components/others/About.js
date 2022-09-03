@@ -15,37 +15,28 @@ function About() {
         <Accordion.Item eventKey="0">
           <Accordion.Header>Chess game</Accordion.Header>
           <Accordion.Body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+          The current form of the game emerged in Spain and the rest of Southern Europe during the second half of the 15th century after evolving from chaturanga, a similar but much older game of Indian origin. Today, chess is one of the world's most popular games, played by millions of people worldwide. <br/><br/>
+          <Link to='/games/chess'>
+            <Button>Play</Button>
+          </Link>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header>React Quiz</Accordion.Header>
           <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+          A quiz is a form of game or mind sport in which players attempt to answer questions correctly about a certain or variety of subjects. Quizzes can be used as a brief assessment in education and similar fields to measure growth in knowledge, abilities, or skills.  <br/><br/>
+          <Link to='/games/quiz'>
+            <Button>Play</Button>
+          </Link>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="2">
           <Accordion.Header>Weather API</Accordion.Header>
           <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+          OpenWeatherMap is an online service, that provides global weather data via API, including current weather data, forecasts, nowcasts and historical weather data for any geographical location.  <br/> <br/>
+          <Link to='/apps/weather'>
+            <Button>Show</Button>
+          </Link>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
@@ -92,7 +83,10 @@ function About() {
         <Carousel.Caption>
           <h3>Weather</h3>
           <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-          <Button variant='outline-light'>Show</Button>
+          <Link to='/apps/weather'>
+            <Button variant='outline-light'>Show</Button>
+          </Link>
+          {/* <Button variant='outline-light'>Show</Button> */}
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel>
