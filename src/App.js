@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState, createContext} from 'react';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Mobnav from './components/Mobnav';
 import Header from './components/Header';
@@ -16,15 +16,20 @@ import GamesT from './components/games/tetris';
 import Weather from './components/others/apps/Weather';
 import Todo from './components/others/todo/Todo';
 
+export const mobileMenuContext = createContext();
+
 function App() {
 
-  const navClicked = false;
-  const linkClicked = false;
+  // const navClicked = React.createContext(false);
+  const [navClicked, setNavClicked] = useState(false);
+  // const linkClicked = false;
 
   return (
     <Router>
-        <Header className='primary-header' value={navClicked}/>
-        <Mobnav value={linkClicked}/>
+      <mobileMenuContext.Provider value={{navClicked, setNavClicked}}>
+        <Header className='primary-header'/>
+        <Mobnav/>
+      </mobileMenuContext.Provider>
       <Routes>
         {/* first level routes */}
         <Route path='/' exact element={<Home/>}/>
@@ -38,8 +43,8 @@ function App() {
         <Route path='/games/snake' element={<GamesS/>}/>
         <Route path='/games/tetris' element={<GamesT/>}/>
 
-        <Route path='/apps/weather' element={<Weather/>}/>
         {/* mini shi*s */}
+        <Route path='/apps/weather' element={<Weather/>}/>
         <Route path='/apps/todo' element={<Todo/>}/>
       </Routes>
     </Router>

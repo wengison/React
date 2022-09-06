@@ -1,39 +1,34 @@
-import React, {useEffect}   from 'react';
+import React, {useEffect, useContext}   from 'react';
 import { NavLink } from 'react-router-dom';
 import {FaUserCircle, FaReacteurope} from 'react-icons/fa';
-
+import { mobileMenuContext } from '../App';
 import './style/header.css';
 import './style/media-header.css';
 
-const Header = ({value}) => {
+const Header = () => {
 
-  // let clicked = false;
-
+  const {navClicked, setNavClicked} = useContext(mobileMenuContext);
   
-    const hamburger = ()=> {
-      const ham = document.querySelector('#nav-icon3');
-      const mobnav = document.querySelector('.wtf-mobile');
-      // const body = document.querySelector('.just-center');
-  
-      ham.addEventListener('click',()=>{
-        if(!value) {
-          mobnav.classList.add('active');
-          ham.classList.add('open');
-          value = true;
-        } else {
-          mobnav.classList.remove('active');
-          ham.classList.remove('open');
-          value = false;
-        }
-      });
+  const clickFunction = () => {
+    const ham = document.querySelector('#nav-icon3');
+    const mobnav = document.querySelector('.wtf-mobile');
+    console.log(navClicked);
+    // !navClicked? setNavClicked(true): setNavClicked(false);
+    if(!navClicked) {
+      mobnav.classList.add('active');
+      ham.classList.add('open');
+      setNavClicked(true);
+    } else {
+      mobnav.classList.remove('active');
+      ham.classList.remove('open');
+      setNavClicked(false);
     }
-    setTimeout(hamburger,10);
-
-    
-
+  }
+  
   useEffect(()=>{
-    // console.log('clean');
-  },[])
+    
+    // console.log(navClicked);
+  },[navClicked])
 
   return (
     <div className='header'>
@@ -59,7 +54,7 @@ const Header = ({value}) => {
       </div>
 
       <div className='hamburger-menu'>
-      <div id='nav-icon3' className='close'>
+      <div id='nav-icon3' className='close' onClick={()=>clickFunction()}>
         <span></span>
         <span></span>
         <span></span>

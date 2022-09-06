@@ -47,7 +47,7 @@ function Apps() {
           </Card.Body>
         </Card>
 
-        <Card className="text-center">
+        {/* <Card className="text-center">
           <Card.Header>#4</Card.Header>
           <Card.Body>
             <Card.Title>React 4</Card.Title>
@@ -67,7 +67,7 @@ function Apps() {
               <Button variant="primary">Try this</Button>
             </NavLink>
           </Card.Body>
-        </Card>
+        </Card> */}
       </div>
     </>
   )
